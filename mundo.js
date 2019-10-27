@@ -1,6 +1,4 @@
-import bolas from './bolas.js';
-import tomates from './tomates.js';
-import frascos from './frascos.js';
+import itemJuego from './itemJuego.js';
 const config = {
     width: 1300,
     height: 650,
@@ -18,15 +16,13 @@ const config = {
 }
 
 var game = new Phaser.Game(config);
+var bolas = [];
+var frascos = [];
+var tomates = [];
 
 function init() {
 
 }
-
-var nbolas = 0;
-var ntomate = 0;
-var nfrasco = 0;
-
 
 function preload() {
     this.load.image("bola", "./assets/bola.png");
@@ -35,13 +31,9 @@ function preload() {
 }
 
 function create() {
-    //this.bola = this.physics.add.image(100, 0, "bola");
-    //this.bola.setVelocity(0, 20);
-    //this.bola.setInteractive();
-    //this.input.setDraggable(this.bola);
 
-    
-    this.input.on('dragstart', function (pointer, gameObject) {
+
+    this.input.on('dragstart', function (pointer, gameObject) { // Empieza a arrastrar
 
     });
     this.input.on('drag', function (pointer, gameObject, dragX, dragY) { // Arrastrando objeto
@@ -56,27 +48,37 @@ function create() {
 
 function update() {
     creacionDeItem(this);
+
 }
 
 function creacionDeItem(scene) {
-    var random = Phaser.Math.Between(0, 2);
+    let random = Phaser.Math.Between(0, 2);
     switch (random) {
         case 0:
-            if (nbolas != 10) {
-                var bola = new bolas(scene, Phaser.Math.Between(0, 1300), -30, 10, "bola");
-                nbolas++;
+            if (bolas.length != 10) {
+                let rnd = Phaser.Math.Between(0, 1300);
+                let sw = false;
+                bolas.forEach(item => {
+                    console.log(item.width);
+                    if (Math.abs(item.x - rnd) <= item.width) {
+                        sw = true;
+                    }
+                });
+                if (!sw){
+                    bolas.push(new itemJuego(scene, rnd, -30, 10, "bola"));
+                }
+
             }
             break;
         case 1:
-            if (ntomate != 5) {
-                var tomate = new tomates(scene, Phaser.Math.Between(0, 1300), -30, 20, "tomate");
-                ntomate++;
+            if (tomates.length != 5) {
+                tomates.push(new itemJuego(scene, Phaser.Math.Between(0, 1300), -30, 20, "tomate"));
+
             }
             break;
         case 2:
-            if (nfrasco != 2) {
-                var frasco = new frascos(scene, Phaser.Math.Between(0, 1300), -30, 30, "frasco");
-                nfrasco++;
+            if (frascos.length != 2) {
+                frascos.push(new itemJuego(scene, Phaser.Math.Between(0, 1300), -30, 30, "frasco"));
             }
             break;
     }
