@@ -44,7 +44,7 @@ function create() {
     });
     this.input.on('dragend', function (pointer, gameObject) { //Cuando se suelta el objeto
         gameObject.body.setVelocityY(gameObject.defaultVelocity);
-        
+        gameObject.tint = 0xFFFFFF;
     });
     timer = this.time.addEvent({ delay: 1000, callback: updateCounter, callbackScope: this, loop: true });
 }
@@ -53,13 +53,13 @@ function create() {
 function update() {
 
     creacionDeItem(this);
-    verificarEstaEnElSuelo(bananas);
-    verificarEstaEnElSuelo(tomates);
-    verificarEstaEnElSuelo(libros);
+    isOnFloor(bananas);
+    isOnFloor(tomates);
+    isOnFloor(libros);
 
 }
 
-function verificarEstaEnElSuelo(array) {
+function isOnFloor(array) {
     array.forEach(item => {
         if (item.y + item.height / 2 >= 650){ // Si está en el piso
             item.body.setVelocityY(0); // Se queda quieto
@@ -110,4 +110,8 @@ function creacionDeItem(scene) {
     }
 
 
+}
+
+function colisiona(item1, item2) {
+    
 }
