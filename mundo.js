@@ -44,18 +44,33 @@ function create() {
     });
     this.input.on('dragend', function (pointer, gameObject) { //Cuando se suelta el objeto
         gameObject.body.setVelocityY(gameObject.defaultVelocity);
+        
     });
     timer = this.time.addEvent({ delay: 1000, callback: updateCounter, callbackScope: this, loop: true });
 }
 
 
 function update() {
+
     creacionDeItem(this);
+    verificarEstaEnElSuelo(bananas);
+    verificarEstaEnElSuelo(tomates);
+    verificarEstaEnElSuelo(libros);
 
 }
 
+function verificarEstaEnElSuelo(array) {
+    array.forEach(item => {
+        if (item.y + item.height / 2 >= 650){ // Si está en el piso
+            item.body.setVelocityY(0); // Se queda quieto
+            item.input.draggable = false;  // No se puede arrastrar
+        }
+    });
+
+
+}
 function updateCounter() {
-    
+
     console.log(cont++);
     if (cont == 10) {
         timer.callback = null;
@@ -74,12 +89,12 @@ function creacionDeItem(scene) {
                         sw = true;
                     }
                 });
-                if (!sw){
+                if (!sw) {
                     libros.push(new itemJuego(scene, rnd, -30, 10, "libro"));
                 }
 
             }
-            
+
             break;
         case 1:
             if (tomates.length != 5) {
