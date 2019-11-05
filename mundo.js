@@ -11,15 +11,14 @@ const config = {
     },
     physics: {
         default: "arcade",
-
     }
 }
 
 var game = new Phaser.Game(config);
 var timer;
 var cont = 0;
-var bolas = [];
-var frascos = [];
+var libros = [];
+var bananas = [];
 var tomates = [];
 
 function init() {
@@ -27,14 +26,17 @@ function init() {
 }
 
 function preload() {
-    this.load.image("bola", "./assets/bola.png");
-    this.load.image("frasco", "./assets/frasco.png");
+    this.load.image("libro", "./assets/libro.png");
+    this.load.image("banana", "./assets/banana.png");
     this.load.image("tomate", "./assets/tomate.png");
 }
 
 function create() {
+    // this.cameras.main.backgroundColor.setTo(255,255,255); // Color de fondo de la escena
+
     this.input.on('dragstart', function (pointer, gameObject) { // Empieza a arrastrar
         gameObject.body.setVelocityY(0);
+        gameObject.tint = Math.random() * 0xffffff;
     });
     this.input.on('drag', function (pointer, gameObject, dragX, dragY) { // Arrastrando objeto
         gameObject.x = dragX;
@@ -64,16 +66,16 @@ function creacionDeItem(scene) {
     let random = Phaser.Math.Between(0, 2);
     switch (random) {
         case 0:
-            if (bolas.length != 10) {
+            if (libros.length != 10) {
                 let rnd = Phaser.Math.Between(0, 1300);
                 let sw = false;
-                bolas.forEach(item => {
+                libros.forEach(item => {
                     if (Math.abs(item.x - rnd) <= item.width) {
                         sw = true;
                     }
                 });
                 if (!sw){
-                    bolas.push(new itemJuego(scene, rnd, -30, 10, "bola"));
+                    libros.push(new itemJuego(scene, rnd, -30, 10, "libro"));
                 }
 
             }
@@ -86,8 +88,8 @@ function creacionDeItem(scene) {
             }
             break;
         case 2:
-            if (frascos.length != 2) {
-                frascos.push(new itemJuego(scene, Phaser.Math.Between(0, 1300), -30, 30, "frasco"));
+            if (bananas.length != 2) {
+                bananas.push(new itemJuego(scene, Phaser.Math.Between(0, 1300), -30, 30, "banana"));
             }
             break;
     }
