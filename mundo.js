@@ -26,9 +26,45 @@ function init() {
 }
 
 function preload() {
-    this.load.image("libro", "./assets/libro.png");
-    this.load.image("banana", "./assets/banana.png");
-    this.load.image("tomate", "./assets/tomate.png");
+    this.load.image("ContenedorRojo", "./assets/e-WasteBin/binE-Waste.png");
+    this.load.image("Calculadora","./assets/e-WasteBin/calculator_1.png" );
+    this.load.image("foco","./assets/e-WasteBin/foco.png");
+    this.load.image("microondas","./assets/e-WasteBin/microondas.png");
+    this.load.image("BateriaOne","./assets/e-WasteBin/Recurso 10.png");
+    this.load.image("BateriaTwo","./assets/e-WasteBin/Recurso 11.png");
+    this.load.image("ContenedorAzul","./assets/glassBin/binGlass.png");
+    this.load.image("VidrioOne","./assets/glassBin/Recurso 3.png");
+    this.load.image("VidrioTwo","./assets/glassBin/Recurso 14.png");
+    this.load.image("VidrioThree","./assets/glassBin/Recurso 27.png");
+    this.load.image("VidrioFour","./assets/glassBin/Recurso 28.png");
+    this.load.image("Metalbin","./assets/metalBin/binMetal.png");
+    this.load.image("MetalOne","./assets/metalBin/lata.png");
+    this.load.image("MetalTwo","./assets/metalBin/lata1.png");
+    this.load.image("MetalThree","./assets/metalBin/lata2.png");
+    this.load.image("MetalFour","./assets/metalBin/lata3.png");
+    this.load.image("MetalFive","./assets/metalBin/lata4.png");
+    this.load.image("MetalSix","./assets/metalBin/Recurso 9.png");
+    this.load.image("MetalSeven","./assets/metalBin/tijera.png");
+    this.load.image("OrganicBin","./assets/organicBin/organicc_1.png");
+    this.load.image("OrganicOne","./assets/organicBin/bone.png");
+    this.load.image("OrganicTwo","./assets/organicBin/pimentorn2.png");
+    this.load.image("OrganicThree","./assets/organicBin/Recurso 5.png");
+    this.load.image("OrganicFour","./assets/organicBin/Recurso 6.png");
+    this.load.image("OrganicFive","./assets/organicBin/Recurso 7.png");
+    this.load.image("OrganicSix","./assets/organicBin/Recurso 22.png");
+    this.load.image("OrganicSeven","./assets/organicBin/Recurso 23.png");
+    this.load.image("OrganicEight","./assets/organicBin/zanahoria.png");
+    this.load.image("PaperBin","./assets/paperBin/binPaper.png");
+    this.load.image("PaperOne","./assets/paperBin/book.png");
+    this.load.image("PaperTwo","./assets/paperBin/Recurso 18.png");
+    this.load.image("PaperThree","./assets/paperBin/Recurso 20.png");
+    this.load.image("PaperFour","./assets/paperBin/Recurso 21.png");
+    this.load.image("Plasticbin","./assets/plasticBin/binPlastic.png");
+    this.load.image("PlasticOne","./assets/plasticBin/Recurso 4.png");
+    this.load.image("PlasticTwo","./assets/plasticBin/Recurso 32.png");
+    this.load.image("PlasticThree","./assets/plasticBin/Recurso 33.png");
+    this.load.image("PlasticFour","./assets/plasticBin/Recurso 35.png");
+  
 }
 
 function create() {
