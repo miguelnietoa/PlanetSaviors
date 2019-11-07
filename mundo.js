@@ -18,6 +18,9 @@ var game = new Phaser.Game(config);
 var timer;
 var cont = 0;
 var items = [];
+var txtPuntaje;
+var glassBin, plasticBin, metalBin, paperBin, organicBin, eWasteBin;
+var puntaje = 0;
 
 function init() {
 
@@ -67,15 +70,17 @@ function preload() {
 
 function create() {
     // this.cameras.main.backgroundColor.setTo(255,255,255); // Color de fondo de la escena
-    console.log(this.add.image(80, 110, 'glassBin').setScale(0.8).width); 
-    this.add.image(80, 110*3, 'plasticBin').setScale(0.75);
-    this.add.image(80, 110*5, 'metalBin').setScale(0.75);
-    this.add.image(1220, 110, 'paperBin').setScale(0.8);
-    this.add.image(1220, 110*3, 'organicBin').setScale(0.75);
-    this.add.image(1220, 110*5, 'eWasteBin').setScale(0.75);
+    glassBin = this.add.image(80, 110, 'glassBin').setScale(0.8);
+    plasticBin = this.add.image(80, 110 * 3, 'plasticBin').setScale(0.75);
+    metalBin = this.add.image(80, 110 * 5, 'metalBin').setScale(0.75);
+    paperBin = this.add.image(1220, 110, 'paperBin').setScale(0.8);
+    organicBin = this.add.image(1220, 110 * 3, 'organicBin').setScale(0.75);
+    eWasteBin = this.add.image(1220, 110 * 5, 'eWasteBin').setScale(0.75);
+    txtPuntaje = this.add.text(570, 20, 'Puntaje: 0', { font: '24px Arial', fill: '#ffffff' });
     
 
-    
+
+
     this.input.on('dragstart', function (pointer, gameObject) { // Empieza a arrastrar
         gameObject.body.setVelocityY(0);
         gameObject.tint = Math.random() * 0xffffff;
@@ -84,10 +89,101 @@ function create() {
         gameObject.x = dragX;
         gameObject.y = dragY;
     });
-    this.input.on('dragend', function (pointer, gameObject) { //Cuando se suelta el objeto
+    this.input.on('dragend', function (pointer, gameObject) { // Cuando se suelta el objeto
         gameObject.body.setVelocityY(gameObject.defaultVelocity);
         gameObject.tint = 0xFFFFFF;
+        if (colisiona(gameObject, glassBin)) {
+            console.log("sdf");
+            if (gameObject.category.startsWith("glass")) {
+                console.log("correcto");
+                var index = items.indexOf(gameObject);
+                if (index !== -1) items.splice(index, 1);
+                gameObject.destroy();
+                puntaje += 5;
+            } else {
+                console.log("incorrecto");
+                var index = items.indexOf(gameObject);
+                if (index !== -1) items.splice(index, 1);
+                gameObject.destroy();
+                puntaje -= 5;
+            }
+        } else if (colisiona(gameObject, plasticBin)) {
+            if (gameObject.category.startsWith("plastic")) {
+                console.log("correcto");
+                gameObject.destroy();
+                puntaje += 5;
+            } else {
+                console.log("incorrecto");
+                var index = items.indexOf(gameObject);
+                if (index !== -1) items.splice(index, 1);
+                gameObject.destroy();
+                puntaje -= 5;
+            }
+
+        } else if (colisiona(gameObject, metalBin)) {
+            if (gameObject.category.startsWith("metal")) {
+                console.log("correcto");
+                gameObject.destroy();
+                puntaje += 5;
+            } else {
+                console.log("incorrecto");
+                var index = items.indexOf(gameObject);
+                if (index !== -1) items.splice(index, 1);
+                gameObject.destroy();
+                puntaje -= 5;
+            }
+
+        } else if (colisiona(gameObject, paperBin)) {
+            if (gameObject.category.startsWith("paper")) {
+                console.log("correcto");
+                var index = items.indexOf(gameObject);
+                if (index !== -1) items.splice(index, 1);
+                gameObject.destroy();
+                puntaje += 5;
+                
+
+            } else {
+                console.log("incorrecto");
+                var index = items.indexOf(gameObject);
+                if (index !== -1) items.splice(index, 1);
+                gameObject.destroy();
+                puntaje -= 5;
+            }
+
+        } else if (colisiona(gameObject, organicBin)) {
+            if (gameObject.category.startsWith("organic")) {
+                console.log("correcto");
+                var index = items.indexOf(gameObject);
+                if (index !== -1) items.splice(index, 1);
+                gameObject.destroy();
+                puntaje += 5;
+            } else {
+                console.log("incorrecto");
+                var index = items.indexOf(gameObject);
+                if (index !== -1) items.splice(index, 1);
+                gameObject.destroy();
+                puntaje -= 5;
+            }
+
+        } else if (colisiona(gameObject, eWasteBin)) {
+            if (gameObject.category.startsWith("eWaste")) {
+                console.log("correcto");
+                var index = items.indexOf(gameObject);
+                if (index !== -1) items.splice(index, 1);
+                gameObject.destroy();
+                puntaje += 5;
+            } else {
+                console.log("incorrecto");
+                var index = items.indexOf(gameObject);
+                if (index !== -1) items.splice(index, 1);
+                gameObject.destroy();
+                puntaje -= 5;
+            }
+
+        }
+        txtPuntaje.setText('Puntaje: ' + this.puntaje);
     });
+    
     timer = this.time.addEvent({ delay: 1000, callback: updateCounter, callbackScope: this, loop: true });
 }
 
@@ -96,11 +192,10 @@ function update() {
 
     if (items.length != 15) { // Generando items
         let random = Phaser.Math.Between(0, 5);
-        let item;     
-        random = 3;   
+        let item;
         switch (random) { // VA EN 200
             case 0: // eWasteBin (5)
-            
+
                 item = new itemJuego(this, 200, 0, 30, "eWaste" + Phaser.Math.Between(1, 5));
                 break;
             case 1: // glassBin (4)
@@ -110,7 +205,7 @@ function update() {
                 item = new itemJuego(this, Phaser.Math.Between(160, 1100), 0, 30, "metal" + Phaser.Math.Between(1, 7));
                 break;
             case 3: // organicBin (8)
-                item = new itemJuego(this, Phaser.Math.Between(160, 1100), 0, 30, "organic" +Phaser.Math.Between(1, 8));
+                item = new itemJuego(this, Phaser.Math.Between(160, 1100), 0, 30, "organic" + Phaser.Math.Between(1, 8));
                 break;
             case 4: // paperBin (4)
                 item = new itemJuego(this, Phaser.Math.Between(160, 1100), 0, 30, "paper" + Phaser.Math.Between(1, 4));
@@ -132,6 +227,7 @@ function update() {
     isOnFloor(items);
 
 }
+
 
 function colisionaArray(item, items) {
     let sw = false;
