@@ -65,11 +65,12 @@ function preload() {
     this.load.image("plastic2", "./assets/plasticBin/Recurso 32.png");
     this.load.image("plastic3", "./assets/plasticBin/Recurso 33.png");
     this.load.image("plastic4", "./assets/plasticBin/Recurso 35.png");
-
+    this.load.image("background", "./assets/background.png")
 }
 
 function create() {
     // this.cameras.main.backgroundColor.setTo(255,255,255); // Color de fondo de la escena
+    this.add.image(-80, -20, 'background').setOrigin(0, 0);
     glassBin = this.add.image(80, 110, 'glassBin').setScale(0.8);
     plasticBin = this.add.image(80, 110 * 3, 'plasticBin').setScale(0.75);
     metalBin = this.add.image(80, 110 * 5, 'metalBin').setScale(0.75);
@@ -161,24 +162,24 @@ function update() {
     if (items.length != 15) { // Generando items
         let random = Phaser.Math.Between(0, 5);
         let item;
-        switch (random) { // VA EN 200
+        switch (random) { 
             case 0: // eWasteBin (5)
-                item = new itemJuego(this, 200, 0, 30, "eWaste" + Phaser.Math.Between(1, 5));
+                item = new itemJuego(this, Phaser.Math.Between(200, 1100), 0, 30, "eWaste" + Phaser.Math.Between(1, 5));
                 break;
             case 1: // glassBin (4)
-                item = new itemJuego(this, Phaser.Math.Between(160, 1100), 0, 30, "glass" + Phaser.Math.Between(1, 4));
+                item = new itemJuego(this, Phaser.Math.Between(200, 1100), 0, 30, "glass" + Phaser.Math.Between(1, 4));
                 break;
             case 2: // metalBin (7)s
-                item = new itemJuego(this, Phaser.Math.Between(160, 1100), 0, 30, "metal" + Phaser.Math.Between(1, 7));
+                item = new itemJuego(this, Phaser.Math.Between(200, 1100), 0, 30, "metal" + Phaser.Math.Between(1, 7));
                 break;
             case 3: // organicBin (8)
-                item = new itemJuego(this, Phaser.Math.Between(160, 1100), 0, 30, "organic" + Phaser.Math.Between(1, 8));
+                item = new itemJuego(this, Phaser.Math.Between(200, 1100), 0, 30, "organic" + Phaser.Math.Between(1, 8));
                 break;
             case 4: // paperBin (4)
-                item = new itemJuego(this, Phaser.Math.Between(160, 1100), 0, 30, "paper" + Phaser.Math.Between(1, 4));
+                item = new itemJuego(this, Phaser.Math.Between(200, 1100), 0, 30, "paper" + Phaser.Math.Between(1, 4));
                 break;
             case 5: // plasticBin (4)
-                item = new itemJuego(this, Phaser.Math.Between(160, 1100), 0, 30, "plastic" + Phaser.Math.Between(1, 4));
+                item = new itemJuego(this, Phaser.Math.Between(200, 1100), 0, 30, "plastic" + Phaser.Math.Between(1, 4));
                 break;
         }
         if (item !== undefined) {
