@@ -79,8 +79,6 @@ function create() {
     txtPuntaje = this.add.text(570, 20, 'Puntaje: 0', { font: '24px Arial', fill: '#ffffff' });
     
 
-
-
     this.input.on('dragstart', function (pointer, gameObject) { // Empieza a arrastrar
         gameObject.body.setVelocityY(0);
         gameObject.tint = Math.random() * 0xffffff;
@@ -181,7 +179,7 @@ function create() {
             }
 
         }
-        txtPuntaje.setText('Puntaje: ' + this.puntaje);
+        txtPuntaje.setText('Puntaje: ' + puntaje);
     });
     
     timer = this.time.addEvent({ delay: 1000, callback: updateCounter, callbackScope: this, loop: true });
@@ -195,7 +193,6 @@ function update() {
         let item;
         switch (random) { // VA EN 200
             case 0: // eWasteBin (5)
-
                 item = new itemJuego(this, 200, 0, 30, "eWaste" + Phaser.Math.Between(1, 5));
                 break;
             case 1: // glassBin (4)
@@ -221,11 +218,9 @@ function update() {
                 items.push(item);
             }
         }
-
-
     }
-    isOnFloor(items);
 
+    isOnFloor(items);
 }
 
 
