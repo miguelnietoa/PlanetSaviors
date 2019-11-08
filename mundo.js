@@ -77,7 +77,7 @@ function create() {
     organicBin = this.add.image(1220, 110 * 3, 'organicBin').setScale(0.75);
     eWasteBin = this.add.image(1220, 110 * 5, 'eWasteBin').setScale(0.75);
     txtPuntaje = this.add.text(570, 20, 'Puntaje: 0', { font: '24px Arial', fill: '#ffffff' });
-    
+
 
     this.input.on('dragstart', function (pointer, gameObject) { // Empieza a arrastrar
         gameObject.body.setVelocityY(0);
@@ -90,98 +90,68 @@ function create() {
     this.input.on('dragend', function (pointer, gameObject) { // Cuando se suelta el objeto
         gameObject.body.setVelocityY(gameObject.defaultVelocity);
         gameObject.tint = 0xFFFFFF;
+
+        // Se elimina de la lista de items interactivos
+        var index = items.indexOf(gameObject);
+        if (index !== -1) items.splice(index, 1);
+
         if (colisiona(gameObject, glassBin)) {
-            console.log("sdf");
             if (gameObject.category.startsWith("glass")) {
                 console.log("correcto");
-                var index = items.indexOf(gameObject);
-                if (index !== -1) items.splice(index, 1);
-                gameObject.destroy();
                 puntaje += 5;
             } else {
                 console.log("incorrecto");
-                var index = items.indexOf(gameObject);
-                if (index !== -1) items.splice(index, 1);
-                gameObject.destroy();
                 puntaje -= 5;
             }
         } else if (colisiona(gameObject, plasticBin)) {
             if (gameObject.category.startsWith("plastic")) {
                 console.log("correcto");
-                gameObject.destroy();
                 puntaje += 5;
             } else {
                 console.log("incorrecto");
-                var index = items.indexOf(gameObject);
-                if (index !== -1) items.splice(index, 1);
-                gameObject.destroy();
                 puntaje -= 5;
             }
 
         } else if (colisiona(gameObject, metalBin)) {
             if (gameObject.category.startsWith("metal")) {
                 console.log("correcto");
-                gameObject.destroy();
                 puntaje += 5;
             } else {
                 console.log("incorrecto");
-                var index = items.indexOf(gameObject);
-                if (index !== -1) items.splice(index, 1);
-                gameObject.destroy();
                 puntaje -= 5;
             }
 
         } else if (colisiona(gameObject, paperBin)) {
             if (gameObject.category.startsWith("paper")) {
                 console.log("correcto");
-                var index = items.indexOf(gameObject);
-                if (index !== -1) items.splice(index, 1);
-                gameObject.destroy();
                 puntaje += 5;
-                
-
             } else {
                 console.log("incorrecto");
-                var index = items.indexOf(gameObject);
-                if (index !== -1) items.splice(index, 1);
-                gameObject.destroy();
                 puntaje -= 5;
             }
 
         } else if (colisiona(gameObject, organicBin)) {
             if (gameObject.category.startsWith("organic")) {
                 console.log("correcto");
-                var index = items.indexOf(gameObject);
-                if (index !== -1) items.splice(index, 1);
-                gameObject.destroy();
                 puntaje += 5;
             } else {
                 console.log("incorrecto");
-                var index = items.indexOf(gameObject);
-                if (index !== -1) items.splice(index, 1);
-                gameObject.destroy();
                 puntaje -= 5;
             }
 
         } else if (colisiona(gameObject, eWasteBin)) {
             if (gameObject.category.startsWith("eWaste")) {
                 console.log("correcto");
-                var index = items.indexOf(gameObject);
-                if (index !== -1) items.splice(index, 1);
-                gameObject.destroy();
                 puntaje += 5;
             } else {
                 console.log("incorrecto");
-                var index = items.indexOf(gameObject);
-                if (index !== -1) items.splice(index, 1);
-                gameObject.destroy();
                 puntaje -= 5;
             }
-
         }
+        gameObject.destroy();
         txtPuntaje.setText('Puntaje: ' + puntaje);
     });
-    
+
     timer = this.time.addEvent({ delay: 1000, callback: updateCounter, callbackScope: this, loop: true });
 }
 
