@@ -21,7 +21,7 @@ var items = [];
 var txtPuntaje;
 var glassBin, plasticBin, metalBin, paperBin, organicBin, eWasteBin;
 var puntaje = 0;
-var musicPop, musicFail;
+var musicPop, musicFail, musicFondo;
 
 function init() {
 
@@ -68,7 +68,8 @@ function preload() {
     this.load.image("plastic4", "./assets/plasticBin/Recurso 35.png");
     this.load.image("background", "./assets/background.png");
     this.load.audio("musicpop", ["./assets/music/pop.mp3","./assets/music/pop.ogg"]);
-    this.load.audio("musicfail", "./assets/music/fail.mp3");
+    this.load.audio("musicfail", ["./assets/music/fail.mp3", "./assets/music/fail.ogg"]);
+    this.load.audio("musicfondo", ["./assets/music/fondo.mp3", "./assets/music/fondo.ogg"]);
 }
 
 function create() {
@@ -85,7 +86,18 @@ function create() {
     //Music
     musicPop = this.sound.add('musicpop');
     musicFail = this.sound.add('musicfail');
-    
+    musicFondo = this.sound.add("musicfondo");
+
+    var musicConfig = {
+        mute: false,
+        volume: 0.3,
+        rate: 1,
+        detune: 0,
+        seek: 0,
+        loop: true,
+        delay: 0
+    }
+    musicFondo.play(musicConfig);
 
     this.input.on('dragstart', function (pointer, gameObject) { // Empieza a arrastrar
         gameObject.body.setVelocityY(0);
@@ -106,6 +118,7 @@ function create() {
         if (colisiona(gameObject, glassBin)) {
             if (gameObject.category.startsWith("glass")) {
                 console.log("correcto");
+                
                 musicPop.play();
                 puntaje += 5;
             } else {
@@ -113,6 +126,8 @@ function create() {
                 musicFail.play();
                 puntaje -= 5;
             }
+            
+            gameObject.destroy();
         } else if (colisiona(gameObject, plasticBin)) {
             if (gameObject.category.startsWith("plastic")) {
                 console.log("correcto");
@@ -123,6 +138,7 @@ function create() {
                 musicFail.play();
                 puntaje -= 5;
             }
+            gameObject.destroy();
 
         } else if (colisiona(gameObject, metalBin)) {
             if (gameObject.category.startsWith("metal")) {
@@ -134,6 +150,7 @@ function create() {
                 musicFail.play();
                 puntaje -= 5;
             }
+            gameObject.destroy();
 
         } else if (colisiona(gameObject, paperBin)) {
             if (gameObject.category.startsWith("paper")) {
@@ -145,6 +162,7 @@ function create() {
                 musicFail.play();
                 puntaje -= 5;
             }
+            gameObject.destroy();
 
         } else if (colisiona(gameObject, organicBin)) {
             if (gameObject.category.startsWith("organic")) {
@@ -156,6 +174,7 @@ function create() {
                 musicFail.play();
                 puntaje -= 5;
             }
+            gameObject.destroy();
 
         } else if (colisiona(gameObject, eWasteBin)) {
             if (gameObject.category.startsWith("eWaste")) {
@@ -167,8 +186,9 @@ function create() {
                 musicFail.play();
                 puntaje -= 5;
             }
+            gameObject.destroy();
         }
-        gameObject.destroy();
+        
         txtPuntaje.setText('Puntaje: ' + puntaje);
     });
 
