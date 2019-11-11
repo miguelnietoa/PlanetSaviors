@@ -9,6 +9,13 @@ const config = {
         create: create,
         update: update
     },
+    scale: {
+        mode: Phaser.Scale.NONE,
+        autoCenter: Phaser.Scale.CENTER_HORIZONTALLY
+    },
+    audio: {
+        disableWebAudio: true
+    },
     physics: {
         default: "arcade",
     }
