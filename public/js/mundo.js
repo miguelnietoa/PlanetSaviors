@@ -1,4 +1,5 @@
 import itemJuego from './itemJuego.js';
+
 const config = {
     width: 1300,
     height: 650,
@@ -9,70 +10,91 @@ const config = {
         create: create,
         update: update
     },
+    scale: {
+        mode: Phaser.Scale.NONE,
+        autoCenter: Phaser.Scale.CENTER_HORIZONTALLY
+    },
+    audio: {
+        disableWebAudio: true
+    },
     physics: {
         default: "arcade",
     }
 }
 
+var it;
 var game = new Phaser.Game(config);
+var socket = io();
 var timer;
 var cont = 0;
 var items = [];
 var txtPuntaje;
 var glassBin, plasticBin, metalBin, paperBin, organicBin, eWasteBin;
 var puntaje = 0;
-var musicPop, musicFail, musicFondo;
+var sw = false;
+var musicFondo, musicPop, musicFail;
 
 function init() {
-
+     
+    
 }
 
+socket.on('getCounter', function (num) {
+    console.log(num);
+    if (num === 1) {
+        this.add.image(0, 0, 'metal1');
+
+    }
+}); 
+
 function preload() {
-    this.load.image("eWasteBin", "./assets/e-WasteBin/binE-Waste.png");
-    this.load.image("eWaste1", "./assets/e-WasteBin/calculator_1.png");
-    this.load.image("eWaste2", "./assets/e-WasteBin/foco.png");
-    this.load.image("eWaste3", "./assets/e-WasteBin/microondas.png");
-    this.load.image("eWaste4", "./assets/e-WasteBin/Recurso 10.png");
-    this.load.image("eWaste5", "./assets/e-WasteBin/Recurso 11.png");
-    this.load.image("glassBin", "./assets/glassBin/binGlass.png");
-    this.load.image("glass1", "./assets/glassBin/Recurso 3.png");
-    this.load.image("glass2", "./assets/glassBin/Recurso 14.png");
-    this.load.image("glass3", "./assets/glassBin/Recurso 27.png");
-    this.load.image("glass4", "./assets/glassBin/Recurso 28.png");
-    this.load.image("metalBin", "./assets/metalBin/binMetal.png");
-    this.load.image("metal1", "./assets/metalBin/lata.png");
-    this.load.image("metal2", "./assets/metalBin/lata1.png");
-    this.load.image("metal3", "./assets/metalBin/lata2.png");
-    this.load.image("metal4", "./assets/metalBin/lata3.png");
-    this.load.image("metal5", "./assets/metalBin/lata4.png");
-    this.load.image("metal6", "./assets/metalBin/Recurso 9.png");
-    this.load.image("metal7", "./assets/metalBin/tijera.png");
-    this.load.image("organicBin", "./assets/organicBin/organicc_1.png");
-    this.load.image("organic1", "./assets/organicBin/bone.png");
-    this.load.image("organic2", "./assets/organicBin/pimenton2.png");
-    this.load.image("organic3", "./assets/organicBin/Recurso 5.png");
-    this.load.image("organic4", "./assets/organicBin/Recurso 6.png");
-    this.load.image("organic5", "./assets/organicBin/Recurso 7.png");
-    this.load.image("organic6", "./assets/organicBin/Recurso 22.png");
-    this.load.image("organic7", "./assets/organicBin/Recurso 23.png");
-    this.load.image("organic8", "./assets/organicBin/zanahoria.png");
-    this.load.image("paperBin", "./assets/paperBin/binPaper.png");
-    this.load.image("paper1", "./assets/paperBin/book.png");
-    this.load.image("paper2", "./assets/paperBin/Recurso 18.png");
-    this.load.image("paper3", "./assets/paperBin/Recurso 20.png");
-    this.load.image("paper4", "./assets/paperBin/Recurso 21.png");
-    this.load.image("plasticBin", "./assets/plasticBin/binPlastic.png");
-    this.load.image("plastic1", "./assets/plasticBin/Recurso 4.png");
-    this.load.image("plastic2", "./assets/plasticBin/Recurso 32.png");
-    this.load.image("plastic3", "./assets/plasticBin/Recurso 33.png");
-    this.load.image("plastic4", "./assets/plasticBin/Recurso 35.png");
-    this.load.image("background", "./assets/background.png");
-    this.load.audio("musicpop", ["./assets/music/pop.mp3","./assets/music/pop.ogg"]);
-    this.load.audio("musicfail", ["./assets/music/fail.mp3", "./assets/music/fail.ogg"]);
-    this.load.audio("musicfondo", ["./assets/music/fondo.mp3", "./assets/music/fondo.ogg"]);
+    this.load.spritesheet("personaje", "../assets/Spritesprueba.png", { frameWidth: 150, frameHeight: 300 });
+    this.load.image("eWasteBin", "../assets/e-WasteBin/binE-Waste.png");
+    this.load.image("eWaste1", "../assets/e-WasteBin/calculator_1.png");
+    this.load.image("eWaste2", "../assets/e-WasteBin/foco.png");
+    this.load.image("eWaste3", "../assets/e-WasteBin/microondas.png");
+    this.load.image("eWaste4", "../assets/e-WasteBin/Recurso 10.png");
+    this.load.image("eWaste5", "../assets/e-WasteBin/Recurso 11.png");
+    this.load.image("glassBin", "../assets/glassBin/binGlass.png");
+    this.load.image("glass1", "../assets/glassBin/Recurso 3.png");
+    this.load.image("glass2", "../assets/glassBin/Recurso 14.png");
+    this.load.image("glass3", "../assets/glassBin/Recurso 27.png");
+    this.load.image("glass4", "../assets/glassBin/Recurso 28.png");
+    this.load.image("metalBin", "../assets/metalBin/binMetal.png");
+    this.load.image("metal1", "../assets/metalBin/lata.png");
+    this.load.image("metal2", "../assets/metalBin/lata1.png");
+    this.load.image("metal3", "../assets/metalBin/lata2.png");
+    this.load.image("metal4", "../assets/metalBin/lata3.png");
+    this.load.image("metal5", "../assets/metalBin/lata4.png");
+    this.load.image("metal6", "../assets/metalBin/Recurso 9.png");
+    this.load.image("metal7", "../assets/metalBin/tijera.png");
+    this.load.image("organicBin", "../assets/organicBin/organicc_1.png");
+    this.load.image("organic1", "../assets/organicBin/bone.png");
+    this.load.image("organic2", "../assets/organicBin/pimenton2.png");
+    this.load.image("organic3", "../assets/organicBin/Recurso 5.png");
+    this.load.image("organic4", "../assets/organicBin/Recurso 6.png");
+    this.load.image("organic5", "../assets/organicBin/Recurso 7.png");
+    this.load.image("organic6", "../assets/organicBin/Recurso 22.png");
+    this.load.image("organic7", "../assets/organicBin/Recurso 23.png");
+    this.load.image("organic8", "../assets/organicBin/zanahoria.png");
+    this.load.image("paperBin", "../assets/paperBin/binPaper.png");
+    this.load.image("paper1", "../assets/paperBin/book.png");
+    this.load.image("paper2", "../assets/paperBin/Recurso 18.png");
+    this.load.image("paper3", "../assets/paperBin/Recurso 20.png");
+    this.load.image("paper4", "../assets/paperBin/Recurso 21.png");
+    this.load.image("plasticBin", "../assets/plasticBin/binPlastic.png");
+    this.load.image("plastic1", "../assets/plasticBin/Recurso 4.png");
+    this.load.image("plastic2", "../assets/plasticBin/Recurso 32.png");
+    this.load.image("plastic3", "../assets/plasticBin/Recurso 33.png");
+    this.load.image("plastic4", "../assets/plasticBin/Recurso 35.png");
+    this.load.image("background", "../assets/background.png");
+    this.load.audio("fondo", "../assets/music/fondo.mp3");
+    this.load.audio("fail", "../assets/music/fail.mp3");
+    this.load.audio("pop", "../assets/music/pop.mp3");
 }
 
 function create() {
+    
     // this.cameras.main.backgroundColor.setTo(255,255,255); // Color de fondo de la escena
     this.add.image(-80, -20, 'background').setOrigin(0, 0);
     glassBin = this.add.image(80, 110, 'glassBin').setScale(0.8);
@@ -83,10 +105,26 @@ function create() {
     eWasteBin = this.add.image(1220, 110 * 5, 'eWasteBin').setScale(0.75);
     txtPuntaje = this.add.text(570, 20, 'Puntaje: 0', { font: '24px Arial', fill: '#ffffff' });
 
-    //Music
-    musicPop = this.sound.add('musicpop');
-    musicFail = this.sound.add('musicfail');
-    musicFondo = this.sound.add("musicfondo");
+    // Personaje
+    this.personaje = this.add.sprite(100, 500, 'personaje');
+    this.anims.create({
+        key: 'izquierda',
+        frames: this.anims.generateFrameNumbers('personaje', { start: 1, end: 4 }),
+        frameRate: 8,
+        repeat: -1
+    });
+    this.anims.create({
+        key: 'derecha',
+        frames: this.anims.generateFrameNumbers('personaje', { start: 6, end: 10 }),
+        frameRate: 8,
+        repeat: -1
+    });
+    this.personaje.play("izquierda", 10);
+
+    //music
+    musicPop = this.sound.add('pop');
+    musicFail = this.sound.add('fail');
+    musicFondo = this.sound.add("fondo");
 
     var musicConfig = {
         mute: false,
@@ -118,7 +156,6 @@ function create() {
         if (colisiona(gameObject, glassBin)) {
             if (gameObject.category.startsWith("glass")) {
                 console.log("correcto");
-                
                 musicPop.play();
                 puntaje += 5;
             } else {
@@ -126,8 +163,6 @@ function create() {
                 musicFail.play();
                 puntaje -= 5;
             }
-            
-            gameObject.destroy();
         } else if (colisiona(gameObject, plasticBin)) {
             if (gameObject.category.startsWith("plastic")) {
                 console.log("correcto");
@@ -138,7 +173,6 @@ function create() {
                 musicFail.play();
                 puntaje -= 5;
             }
-            gameObject.destroy();
 
         } else if (colisiona(gameObject, metalBin)) {
             if (gameObject.category.startsWith("metal")) {
@@ -150,7 +184,6 @@ function create() {
                 musicFail.play();
                 puntaje -= 5;
             }
-            gameObject.destroy();
 
         } else if (colisiona(gameObject, paperBin)) {
             if (gameObject.category.startsWith("paper")) {
@@ -162,7 +195,6 @@ function create() {
                 musicFail.play();
                 puntaje -= 5;
             }
-            gameObject.destroy();
 
         } else if (colisiona(gameObject, organicBin)) {
             if (gameObject.category.startsWith("organic")) {
@@ -174,7 +206,6 @@ function create() {
                 musicFail.play();
                 puntaje -= 5;
             }
-            gameObject.destroy();
 
         } else if (colisiona(gameObject, eWasteBin)) {
             if (gameObject.category.startsWith("eWaste")) {
@@ -186,9 +217,8 @@ function create() {
                 musicFail.play();
                 puntaje -= 5;
             }
-            gameObject.destroy();
         }
-        
+        gameObject.destroy();
         txtPuntaje.setText('Puntaje: ' + puntaje);
     });
 
@@ -196,12 +226,33 @@ function create() {
 }
 
 
+
+
 function update() {
+
+    //Personaje moviendose 
+    if (this.personaje.x < 1000 && !sw) {
+        this.personaje.x += 6;
+        this.personaje.play("izquierda", 10);
+    } else {
+        if (this.personaje.x >= 1000 && !sw) {
+            sw = true;
+        } else {
+            if (this.personaje.x > 200 && sw) {
+                this.personaje.x -= 6;
+                this.personaje.play("derecha", 10);
+            } else {
+                sw = false;
+
+            }
+
+        }
+    }
 
     if (items.length != 15) { // Generando items
         let random = Phaser.Math.Between(0, 5);
         let item;
-        switch (random) { 
+        switch (random) {
             case 0: // eWasteBin (5)
                 item = new itemJuego(this, Phaser.Math.Between(200, 1100), 0, 30, "eWaste" + Phaser.Math.Between(1, 5));
                 break;
@@ -229,7 +280,6 @@ function update() {
             }
         }
     }
-
     isOnFloor(items);
 }
 
