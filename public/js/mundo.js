@@ -1,4 +1,5 @@
 import itemJuego from './itemJuego.js';
+
 const config = {
     width: 1300,
     height: 650,
@@ -21,19 +22,33 @@ const config = {
     }
 }
 
+var it;
 var game = new Phaser.Game(config);
+var socket = io();
 var timer;
 var cont = 0;
 var items = [];
 var txtPuntaje;
 var glassBin, plasticBin, metalBin, paperBin, organicBin, eWasteBin;
 var puntaje = 0;
+var sw = false;
+var musicFondo, musicPop, musicFail;
 
 function init() {
-
+     
+    
 }
 
+socket.on('getCounter', function (num) {
+    console.log(num);
+    if (num === 1) {
+        this.add.image(0, 0, 'metal1');
+
+    }
+}); 
+
 function preload() {
+    this.load.spritesheet("personaje", "../assets/Spritesprueba.png", { frameWidth: 150, frameHeight: 300 });
     this.load.image("eWasteBin", "../assets/e-WasteBin/binE-Waste.png");
     this.load.image("eWaste1", "../assets/e-WasteBin/calculator_1.png");
     this.load.image("eWaste2", "../assets/e-WasteBin/foco.png");
@@ -72,10 +87,14 @@ function preload() {
     this.load.image("plastic2", "../assets/plasticBin/Recurso 32.png");
     this.load.image("plastic3", "../assets/plasticBin/Recurso 33.png");
     this.load.image("plastic4", "../assets/plasticBin/Recurso 35.png");
-    this.load.image("background", "../assets/background.png")
+    this.load.image("background", "../assets/background.png");
+    this.load.audio("fondo", "../assets/music/fondo.mp3");
+    this.load.audio("fail", "../assets/music/fail.mp3");
+    this.load.audio("pop", "../assets/music/pop.mp3");
 }
 
 function create() {
+    
     // this.cameras.main.backgroundColor.setTo(255,255,255); // Color de fondo de la escena
     this.add.image(-80, -20, 'background').setOrigin(0, 0);
     glassBin = this.add.image(80, 110, 'glassBin').setScale(0.8);
@@ -86,6 +105,37 @@ function create() {
     eWasteBin = this.add.image(1220, 110 * 5, 'eWasteBin').setScale(0.75);
     txtPuntaje = this.add.text(570, 20, 'Puntaje: 0', { font: '24px Arial', fill: '#ffffff' });
 
+    // Personaje
+    this.personaje = this.add.sprite(100, 500, 'personaje');
+    this.anims.create({
+        key: 'izquierda',
+        frames: this.anims.generateFrameNumbers('personaje', { start: 1, end: 4 }),
+        frameRate: 8,
+        repeat: -1
+    });
+    this.anims.create({
+        key: 'derecha',
+        frames: this.anims.generateFrameNumbers('personaje', { start: 6, end: 10 }),
+        frameRate: 8,
+        repeat: -1
+    });
+    this.personaje.play("izquierda", 10);
+
+    //music
+    musicPop = this.sound.add('pop');
+    musicFail = this.sound.add('fail');
+    musicFondo = this.sound.add("fondo");
+
+    var musicConfig = {
+        mute: false,
+        volume: 0.3,
+        rate: 1,
+        detune: 0,
+        seek: 0,
+        loop: true,
+        delay: 0
+    }
+    musicFondo.play(musicConfig);
 
     this.input.on('dragstart', function (pointer, gameObject) { // Empieza a arrastrar
         gameObject.body.setVelocityY(0);
@@ -106,53 +156,65 @@ function create() {
         if (colisiona(gameObject, glassBin)) {
             if (gameObject.category.startsWith("glass")) {
                 console.log("correcto");
+                musicPop.play();
                 puntaje += 5;
             } else {
                 console.log("incorrecto");
+                musicFail.play();
                 puntaje -= 5;
             }
         } else if (colisiona(gameObject, plasticBin)) {
             if (gameObject.category.startsWith("plastic")) {
                 console.log("correcto");
+                musicPop.play();
                 puntaje += 5;
             } else {
                 console.log("incorrecto");
+                musicFail.play();
                 puntaje -= 5;
             }
 
         } else if (colisiona(gameObject, metalBin)) {
             if (gameObject.category.startsWith("metal")) {
                 console.log("correcto");
+                musicPop.play();
                 puntaje += 5;
             } else {
                 console.log("incorrecto");
+                musicFail.play();
                 puntaje -= 5;
             }
 
         } else if (colisiona(gameObject, paperBin)) {
             if (gameObject.category.startsWith("paper")) {
                 console.log("correcto");
+                musicPop.play();
                 puntaje += 5;
             } else {
                 console.log("incorrecto");
+                musicFail.play();
                 puntaje -= 5;
             }
 
         } else if (colisiona(gameObject, organicBin)) {
             if (gameObject.category.startsWith("organic")) {
                 console.log("correcto");
+                musicPop.play();
                 puntaje += 5;
             } else {
                 console.log("incorrecto");
+                musicFail.play();
                 puntaje -= 5;
             }
 
         } else if (colisiona(gameObject, eWasteBin)) {
             if (gameObject.category.startsWith("eWaste")) {
                 console.log("correcto");
+                musicPop.play();
                 puntaje += 5;
             } else {
                 console.log("incorrecto");
+                musicFail.play();
                 puntaje -= 5;
             }
         }
@@ -164,12 +226,33 @@ function create() {
 }
 
 
+
+
 function update() {
+
+    //Personaje moviendose 
+    if (this.personaje.x < 1000 && !sw) {
+        this.personaje.x += 6;
+        this.personaje.play("izquierda", 10);
+    } else {
+        if (this.personaje.x >= 1000 && !sw) {
+            sw = true;
+        } else {
+            if (this.personaje.x > 200 && sw) {
+                this.personaje.x -= 6;
+                this.personaje.play("derecha", 10);
+            } else {
+                sw = false;
+
+            }
+
+        }
+    }
 
     if (items.length != 15) { // Generando items
         let random = Phaser.Math.Between(0, 5);
         let item;
-        switch (random) { 
+        switch (random) {
             case 0: // eWasteBin (5)
                 item = new itemJuego(this, Phaser.Math.Between(200, 1100), 0, 30, "eWaste" + Phaser.Math.Between(1, 5));
                 break;
@@ -197,7 +280,6 @@ function update() {
             }
         }
     }
-
     isOnFloor(items);
 }
 
