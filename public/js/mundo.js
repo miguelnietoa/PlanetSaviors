@@ -163,6 +163,8 @@ function create() {
                 musicFail.play();
                 puntaje -= 5;
             }
+            gameObject.destroy();
+            
         } else if (colisiona(gameObject, plasticBin)) {
             if (gameObject.category.startsWith("plastic")) {
                 console.log("correcto");
@@ -173,6 +175,7 @@ function create() {
                 musicFail.play();
                 puntaje -= 5;
             }
+            gameObject.destroy();
 
         } else if (colisiona(gameObject, metalBin)) {
             if (gameObject.category.startsWith("metal")) {
@@ -184,6 +187,7 @@ function create() {
                 musicFail.play();
                 puntaje -= 5;
             }
+            gameObject.destroy();
 
         } else if (colisiona(gameObject, paperBin)) {
             if (gameObject.category.startsWith("paper")) {
@@ -195,6 +199,7 @@ function create() {
                 musicFail.play();
                 puntaje -= 5;
             }
+            gameObject.destroy();
 
         } else if (colisiona(gameObject, organicBin)) {
             if (gameObject.category.startsWith("organic")) {
@@ -206,6 +211,7 @@ function create() {
                 musicFail.play();
                 puntaje -= 5;
             }
+            gameObject.destroy();
 
         } else if (colisiona(gameObject, eWasteBin)) {
             if (gameObject.category.startsWith("eWaste")) {
@@ -217,8 +223,9 @@ function create() {
                 musicFail.play();
                 puntaje -= 5;
             }
+            gameObject.destroy();
         }
-        gameObject.destroy();
+      
         txtPuntaje.setText('Puntaje: ' + puntaje);
     });
 
