@@ -14,7 +14,7 @@ const config = {
         autoCenter: Phaser.Scale.CENTER_HORIZONTALLY
     },
     audio: {
-        disableWebAudio: true
+        disableWebAudio: false
     },
     physics: {
         default: "arcade",
@@ -42,9 +42,7 @@ function create(){
 
         playButton.on("pointerup", () => {
             console.log("correcto");
-            
-
-        })
+        });
         var musicFondo = this.sound.add("music");
         var musicConfig = {
             mute: false,
