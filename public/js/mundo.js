@@ -15,7 +15,7 @@ const config = {
         autoCenter: Phaser.Scale.CENTER_HORIZONTALLY
     },
     audio: {
-        disableWebAudio: true
+        disableWebAudio: false
     },
     physics: {
         default: "arcade",
@@ -24,7 +24,6 @@ const config = {
 
 var it;
 var game = new Phaser.Game(config);
-var socket = io();
 var timer;
 var cont = 0;
 var items = [];
@@ -35,17 +34,11 @@ var sw = false;
 var musicFondo, musicPop, musicFail;
 
 function init() {
-     
-    
+
+
 }
 
-socket.on('getCounter', function (num) {
-    console.log(num);
-    if (num === 1) {
-        this.add.image(0, 0, 'metal1');
 
-    }
-}); 
 
 function preload() {
     this.load.spritesheet("personaje", "../assets/Spritesprueba.png", { frameWidth: 150, frameHeight: 300 });
@@ -94,8 +87,29 @@ function preload() {
 }
 
 function create() {
-    
     // this.cameras.main.backgroundColor.setTo(255,255,255); // Color de fondo de la escena
+
+    var self = this;
+    this.socket = io();
+    this.socket.on('currentPlayers', function (players) {
+        Object.keys(players).forEach(function (id) {
+            if (players[id].playerId === self.socket.id) {
+                //addPlayer(self, players[id]);
+                new itemJuego(self, 400, 300, 10, 'eWaste1');
+            }
+        });
+    });
+    this.socket.on('newPlayer', function (playerInfo) {
+        addOtherPlayers(self, playerInfo);
+    });
+    this.socket.on('disconnect', function (playerId) {
+        self.otherPlayers.getChildren().forEach(function (otherPlayer) {
+            if (playerId === otherPlayer.playerId) {
+                otherPlayer.destroy();
+            }
+        });
+    });
+
     this.add.image(-80, -20, 'background').setOrigin(0, 0);
     glassBin = this.add.image(80, 110, 'glassBin').setScale(0.8);
     plasticBin = this.add.image(80, 110 * 3, 'plasticBin').setScale(0.75);
