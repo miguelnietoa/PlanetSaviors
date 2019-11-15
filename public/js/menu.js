@@ -31,6 +31,8 @@ function preload(){
     this.load.image("fondomenu", "../assets/menu/fondo2.png");
     this.load.image("play", "../assets/menu/play.png");
     this.load.audio("music", "../assets/music/shuinvy-childhood.mp3");
+    this.load.image("sonido","../assets/Sonido/Consonido.png");
+    this.load.image("sinsonido","../assets/Sonido/Sinsonido.png");
     
 }
 
@@ -54,7 +56,21 @@ function create(){
             delay: 0
         }
         musicFondo.play(musicConfig);
+
+        const clickButton = this.add.image(25, 25, 'sonido')
+      .setInteractive()
+      .on('pointerup', () => musicFondo.resume() 
+                                
+      )
+      ;
+      const clickButtont = this.add.image(75, 25, 'sinsonido')
+      .setInteractive()
+      .on('pointerup', () => musicFondo.pause()
+      );
+
 }
+
+
 
 function update(){
 
