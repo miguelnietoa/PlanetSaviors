@@ -1,4 +1,4 @@
-
+import itemJuego from './itemJuego.js';
 
 var it;
 
@@ -13,7 +13,7 @@ var musicFondo, musicPop, musicFail;
 
 
 
-export default class mundo extends Phaser.Scene {
+export default class Mundo extends Phaser.Scene {
     constructor() {
 
         super({ key: 'mundo' });
@@ -179,7 +179,7 @@ export default class mundo extends Phaser.Scene {
             txtPuntaje.setText('Puntaje: ' + puntaje);
         });
 
-        timer = this.time.addEvent({ delay: 1000, callback: updateCounter, callbackScope: this, loop: true });
+        //timer = this.time.addEvent({ delay: 1000, callback: updateCounter, callbackScope: this, loop: true });
     }
 
 
@@ -240,49 +240,52 @@ export default class mundo extends Phaser.Scene {
     }
 
 
-    colisionaArray(item, items) {
-        let sw = false;
-        let i = 0;
-        while (i < items.length && !sw) {
-            if (colisiona(items[i], item)) {
-                sw = true;
-            }
-            i++;
+    
+
+}
+
+function colisionaArray(item, items) {
+    let sw = false;
+    let i = 0;
+    while (i < items.length && !sw) {
+        if (colisiona(items[i], item)) {
+            sw = true;
         }
-        return sw;
+        i++;
     }
-    isOnFloor(array) {
-        let i = 0;
-        array.forEach(item => {
-            if (item.y + item.height / 2 >= 650) { // Si está en el piso
-                item.body.setVelocityY(0); // Se queda quieto
-                item.input.draggable = false;  // No se puede arrastrar
-                items.splice(i, 1);
-            }
-            i++;
-        });
-
-
-    }
-    updateCounter() {
-
-        console.log(cont++);
-        if (cont == 10) {
-            timer.callback = null;
+    return sw;
+}
+function isOnFloor(array) {
+    let i = 0;
+    array.forEach(item => {
+        if (item.y + item.height / 2 >= 650) { // Si está en el piso
+            item.body.setVelocityY(0); // Se queda quieto
+            item.input.draggable = false;  // No se puede arrastrar
+            items.splice(i, 1);
         }
-    }
+        i++;
+    });
 
-    colisiona(item1, item2) {
-        // Se hace el ajuste para que las posiciones sean desde la esquina superior izquierda
-        return colision(item1.x - item1.width / 2, item1.y - item1.height / 2, item1.width, item1.height, item2.x - item2.width / 2, item2.y - item2.height / 2, item2.width, item2.height);
-    }
 
-    colision(x1, y1, w1, h1, x2, y2, w2, h2) {
-        if (x1 < x2 + w2 && x1 + w1 > x2 &&
-            y1 < y2 + h2 && h1 + y1 > y2) {
-            return true;
-        }
-        return false;
-    }
+}
+/*
+updateCounter() {
 
+    console.log(cont++);
+    if (cont == 10) {
+        timer.callback = null;
+    }
+}*/
+
+function colisiona(item1, item2) {
+    // Se hace el ajuste para que las posiciones sean desde la esquina superior izquierda
+    return colision(item1.x - item1.width / 2, item1.y - item1.height / 2, item1.width, item1.height, item2.x - item2.width / 2, item2.y - item2.height / 2, item2.width, item2.height);
+}
+
+function colision(x1, y1, w1, h1, x2, y2, w2, h2) {
+    if (x1 < x2 + w2 && x1 + w1 > x2 &&
+        y1 < y2 + h2 && h1 + y1 > y2) {
+        return true;
+    }
+    return false;
 }
