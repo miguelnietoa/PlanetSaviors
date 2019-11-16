@@ -67,12 +67,13 @@ io.on('connection', function (socket) {
         socket.broadcast.emit('dragendServer', data, collideBin);
         /*if (collideBin) {
             // Se elimina de los items en server
-            borrarItem(data.id);
+            //borrarItem(data.id);
 
             let i = Object.keys(items).length;
             while (i >= Object.keys(items).length) {
                 generarItem(i);
             }
+            io.sockets.emit('currentItems', items[i+1]);
         }*/
 
     }
