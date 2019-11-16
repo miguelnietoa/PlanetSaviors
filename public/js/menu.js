@@ -1,12 +1,15 @@
-
+var sw = false;
 export default class Menu extends Phaser.Scene {
 
     constructor() {
 
-        super({ key: 'menu'});
+        super({ key: 'menu' });
     }
 
     create() {
+
+        this.socket = io();
+        var self = this;
         this.add.image(this.game.renderer.width / 2, this.game.renderer.height / 1.5, 'fondomenu').setDepth(1);
         let playButton = this.add.image(this.game.renderer.width / 2, this.game.renderer.height / 1.5, 'play').setDepth(1);
 
@@ -29,21 +32,25 @@ export default class Menu extends Phaser.Scene {
             )
             ;
         const clickButtont = this.add.image(75, 25, 'sinsonido')
-           .setInteractive()
+            .setInteractive()
             .on('pointerup', () => musicFondo.pause()
             );
 
-            playButton.setInteractive();
+        playButton.setInteractive();
 
-            playButton.on("pointerup", () => {
-                //musicFondo.destroy();
-                musicFondo.destroy();
-                game.scene.start('mundo');
-                
-                //this.scene.destroy('menu');
+        playButton.on("pointerup", () => {
+            console.log("da en play");
+            if (!sw){
+                this.socket.emit('ready');
+                sw = true;
+            }
+            
+        });
 
-                console.log("correcto");
-            });
+        this.socket.on('startGame', ()=>{
+            musicFondo.destroy();
+            game.scene.start('mundo', this.socket);
+        });
 
     }
 

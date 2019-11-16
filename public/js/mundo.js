@@ -19,31 +19,50 @@ export default class Mundo extends Phaser.Scene {
         super({ key: 'mundo' });
     }
 
-    init() {
+    init(socket) {
+        this.socket = socket;
+        console.log("ercibido papa");
     }
 
     create() {
         // this.cameras.main.backgroundColor.setTo(255,255,255); // Color de fondo de la escena
 
+        this.disableVisibilityChange = true;
+
         var self = this;
-        this.socket = io();
-        this.socket.on('currentPlayers', function (players) {
-            Object.keys(players).forEach(function (id) {
-                if (players[id].playerId === self.socket.id) {
-                    //addPlayer(self, players[id]);
-                    new itemJuego(self, 400, 300, 10, 'eWaste1');
-                }
-            });
+
+        this.socket.on('currentItems', function (itemsJSON) {
+            for (let i in itemsJSON) {
+                items.push(new itemJuego(self, itemsJSON[i].id, itemsJSON[i].x, itemsJSON[i].y, itemsJSON[i].velocityY, itemsJSON[i].image));
+            }
+        });
+        this.socket.on('dragstartServer', (data) => {
+            console.log(data.id, data.tint);
+            let item = getItem(data.id);
+            if (item !== undefined) {
+                item.body.setVelocityY(data.velocityY);
+                item.tint = data.tint;
+                console.log("id encontrado");
+            } else {
+                console.log("item no encontrado");
+            }
+
+        });
+        this.socket.on('dragServer', (data) => {
+            let item = getItem(data.id);
+            if (item !== undefined) {
+                item.x = data.x;
+                item.y = data.y;
+            } else {
+                console.log("item no encontrado");
+            }
+
         });
         this.socket.on('newPlayer', function (playerInfo) {
-            addOtherPlayers(self, playerInfo);
+            //addOtherPlayers(self, playerInfo);
         });
         this.socket.on('disconnect', function (playerId) {
-            self.otherPlayers.getChildren().forEach(function (otherPlayer) {
-                if (playerId === otherPlayer.playerId) {
-                    otherPlayer.destroy();
-                }
-            });
+
         });
 
         this.add.image(-80, -20, 'background').setOrigin(0, 0);
@@ -89,11 +108,34 @@ export default class Mundo extends Phaser.Scene {
 
         this.input.on('dragstart', function (pointer, gameObject) { // Empieza a arrastrar
             gameObject.body.setVelocityY(0);
-            gameObject.tint = Math.random() * 0xffffff;
+            let t = Math.random() * 0xffffff;
+            gameObject.tint = t;
+            console.log('comeinzaaa' + gameObject.tint);
+            self.socket.emit('dragstart', {
+                id: gameObject.id,
+                x: gameObject.x,
+                y: gameObject.y,
+                width: gameObject.width,
+                height: gameObject.height,
+                velocityY: 0,
+                image: gameObject.image,
+                tint: t
+            });
+
+
         });
         this.input.on('drag', function (pointer, gameObject, dragX, dragY) { // Arrastrando objeto
             gameObject.x = dragX;
             gameObject.y = dragY;
+            self.socket.emit('drag', {
+                id: gameObject.id,
+                x: gameObject.x,
+                y: gameObject.y,
+                width: gameObject.width,
+                height: gameObject.height,
+                velocityY: 0,
+                image: gameObject.image,
+            });
         });
         this.input.on('dragend', function (pointer, gameObject) { // Cuando se suelta el objeto
             gameObject.body.setVelocityY(gameObject.defaultVelocity);
@@ -205,42 +247,12 @@ export default class Mundo extends Phaser.Scene {
             }
         }
 
-        if (items.length != 15) { // Generando items
-            let random = Phaser.Math.Between(0, 5);
-            let item;
-            switch (random) {
-                case 0: // eWasteBin (5)
-                    item = new itemJuego(this, Phaser.Math.Between(200, 1100), 0, 30, "eWaste" + Phaser.Math.Between(1, 5));
-                    break;
-                case 1: // glassBin (4)
-                    item = new itemJuego(this, Phaser.Math.Between(200, 1100), 0, 30, "glass" + Phaser.Math.Between(1, 4));
-                    break;
-                case 2: // metalBin (7)s
-                    item = new itemJuego(this, Phaser.Math.Between(200, 1100), 0, 30, "metal" + Phaser.Math.Between(1, 7));
-                    break;
-                case 3: // organicBin (8)
-                    item = new itemJuego(this, Phaser.Math.Between(200, 1100), 0, 30, "organic" + Phaser.Math.Between(1, 8));
-                    break;
-                case 4: // paperBin (4)
-                    item = new itemJuego(this, Phaser.Math.Between(200, 1100), 0, 30, "paper" + Phaser.Math.Between(1, 4));
-                    break;
-                case 5: // plasticBin (4)
-                    item = new itemJuego(this, Phaser.Math.Between(200, 1100), 0, 30, "plastic" + Phaser.Math.Between(1, 4));
-                    break;
-            }
-            if (item !== undefined) {
-                if (colisionaArray(item, items)) {
-                    item.destroy();
-                } else {
-                    items.push(item);
-                }
-            }
-        }
+
         isOnFloor(items);
     }
 
 
-    
+
 
 }
 
@@ -288,4 +300,14 @@ function colision(x1, y1, w1, h1, x2, y2, w2, h2) {
         return true;
     }
     return false;
+}
+
+function getItem(id) {
+    for(let i in items) {
+        console.log(items[i].id);
+        if (items[i].id === id){
+            return items[i];
+        }
+    }
+    return undefined;
 }
