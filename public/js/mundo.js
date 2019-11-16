@@ -1,15 +1,14 @@
 import itemJuego from './itemJuego.js';
+import Menu from './menu.js';
+
+  
 
 const config = {
     width: 1300,
     height: 650,
     parent: "container",
     type: Phaser.AUTO,
-    scene: {
-        preload: preload,
-        create: create,
-        update: update
-    },
+    
     scale: {
         mode: Phaser.Scale.NONE,
         autoCenter: Phaser.Scale.CENTER_HORIZONTALLY
@@ -24,6 +23,9 @@ const config = {
 
 var it;
 var game = new Phaser.Game(config);
+game.scene.add('menu',new Menu());
+game.scene.add('juego');
+game.scene.start('menu');
 var timer;
 var cont = 0;
 var items = [];
@@ -33,14 +35,19 @@ var puntaje = 0;
 var sw = false;
 var musicFondo, musicPop, musicFail;
 
-function init() {
+
+
+ class juego extends Phaser.Scene{
+    constructor(){
+
+ super({key:'juego'});
+    }
+    
+init() {
 
 
 }
-
-
-
-function preload() {
+ preload() {
     this.load.spritesheet("personaje", "../assets/Spritesprueba.png", { frameWidth: 150, frameHeight: 300 });
     this.load.image("eWasteBin", "../assets/e-WasteBin/binE-Waste.png");
     this.load.image("eWaste1", "../assets/e-WasteBin/calculator_1.png");
@@ -86,7 +93,7 @@ function preload() {
     this.load.audio("pop", "../assets/music/pop.mp3");
 }
 
-function create() {
+ create() {
     // this.cameras.main.backgroundColor.setTo(255,255,255); // Color de fondo de la escena
 
     var self = this;
@@ -248,8 +255,7 @@ function create() {
 
 
 
-
-function update() {
+update() {
 
     //Personaje moviendose 
     if (this.personaje.x < 1000 && !sw) {
@@ -305,7 +311,7 @@ function update() {
 }
 
 
-function colisionaArray(item, items) {
+ colisionaArray(item, items) {
     let sw = false;
     let i = 0;
     while (i < items.length && !sw) {
@@ -316,8 +322,7 @@ function colisionaArray(item, items) {
     }
     return sw;
 }
-
-function isOnFloor(array) {
+ isOnFloor(array) {
     let i = 0;
     array.forEach(item => {
         if (item.y + item.height / 2 >= 650) { // Si está en el piso
@@ -330,7 +335,7 @@ function isOnFloor(array) {
 
 
 }
-function updateCounter() {
+updateCounter() {
 
     console.log(cont++);
     if (cont == 10) {
@@ -338,12 +343,12 @@ function updateCounter() {
     }
 }
 
-function colisiona(item1, item2) {
+colisiona(item1, item2) {
     // Se hace el ajuste para que las posiciones sean desde la esquina superior izquierda
     return colision(item1.x - item1.width / 2, item1.y - item1.height / 2, item1.width, item1.height, item2.x - item2.width / 2, item2.y - item2.height / 2, item2.width, item2.height);
 }
 
-function colision(x1, y1, w1, h1, x2, y2, w2, h2) {
+ colision(x1, y1, w1, h1, x2, y2, w2, h2) {
     if (x1 < x2 + w2 && x1 + w1 > x2 &&
         y1 < y2 + h2 && h1 + y1 > y2) {
         return true;
@@ -351,3 +356,4 @@ function colision(x1, y1, w1, h1, x2, y2, w2, h2) {
     return false;
 }
 
+}

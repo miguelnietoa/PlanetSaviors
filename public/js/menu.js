@@ -1,50 +1,29 @@
-//import mundo from './public/mundo.js';
-const config = {
-    width: 786,
-    height: 786,
-    parent: "container",
-    type: Phaser.AUTO,
-    scene: {
-        preload: preload,
-        create: create,
-        update: update
-    },
-    scale: {
-        mode: Phaser.Scale.NONE,
-        autoCenter: Phaser.Scale.CENTER_HORIZONTALLY
-    },
-    audio: {
-        disableWebAudio: false
-    },
-    physics: {
-        default: "arcade",
+
+export default class menu extends Phaser.Scene {
+
+    constructor() {
+
+        super({ key: 'menu' });
     }
-}
 
-var it;
-var game = new Phaser.Game(config);
 
-function init() {  
-}
 
-function preload(){
-    this.load.image("fondomenu", "../assets/menu/fondo2.png");
-    this.load.image("play", "../assets/menu/play.png");
-    this.load.audio("music", "../assets/music/shuinvy-childhood.mp3");
-    this.load.image("sonido","../assets/Sonido/Consonido.png");
-    this.load.image("sinsonido","../assets/Sonido/Sinsonido.png");
-    
-}
+    init() {
+    }
 
-function create(){
-    this.add.image(0, 0, 'fondomenu').setOrigin(0, 0);
-    let playButton = this.add.image(this.game.renderer.width / 2, this.game.renderer.height/ 1.5, 'play').setDepth(1);
+    preload() {
+        this.load.image("fondomenu", "../assets/menu/fondo2.png");
+        this.load.image("play", "../assets/menu/play.png");
+        this.load.audio("music", "../assets/music/shuinvy-childhood.mp3");
+        this.load.image("sonido", "../assets/Sonido/Consonido.png");
+        this.load.image("sinsonido", "../assets/Sonido/Sinsonido.png");
 
-    playButton.setInteractive();
+    }
 
-        playButton.on("pointerup", () => {
-            console.log("correcto");
-        });
+    create() {
+        this.add.image(this.game.renderer.width / 2, this.game.renderer.height / 1.5, 'fondomenu').setDepth(1);
+        let playButton = this.add.image(this.game.renderer.width / 2, this.game.renderer.height / 1.5, 'play').setDepth(1);
+
         var musicFondo = this.sound.add("music");
         var musicConfig = {
             mute: false,
@@ -58,20 +37,27 @@ function create(){
         musicFondo.play(musicConfig);
 
         const clickButton = this.add.image(25, 25, 'sonido')
-      .setInteractive()
-      .on('pointerup', () => musicFondo.resume() 
-                                
-      )
-      ;
-      const clickButtont = this.add.image(75, 25, 'sinsonido')
-      .setInteractive()
-      .on('pointerup', () => musicFondo.pause()
-      );
+            .setInteractive()
+            .on('pointerup', () => musicFondo.resume()
 
-}
+            )
+            ;
+        const clickButtont = this.add.image(75, 25, 'sinsonido')
+           .setInteractive()
+            .on('pointerup', () => musicFondo.pause()
+            );
 
+            playButton.setInteractive();
 
+            playButton.on("pointerup", () => {
+                musicFondo.destroy();
 
-function update(){
+                this.scene.start('juego');
+                console.log("correcto");
+            });
 
+    }
+
+    update() {
+    }
 }
