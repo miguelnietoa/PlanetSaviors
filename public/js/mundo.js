@@ -67,7 +67,8 @@ export default class Mundo extends Phaser.Scene {
                     item.destroy();
                     // Falta crear nuevo item
                 } else {
-
+                    item.tint = data.tint;
+                    item.body.setVelocityY(data.velocityY);
                 }
             }
         });
@@ -154,9 +155,7 @@ export default class Mundo extends Phaser.Scene {
             gameObject.body.setVelocityY(gameObject.defaultVelocity);
             gameObject.tint = 0xFFFFFF;
 
-            // Se elimina de la lista de items interactivos
-            var index = items.indexOf(gameObject);
-            if (index !== -1) items.splice(index, 1);
+
 
             var antPuntaje = puntaje;
 
@@ -231,6 +230,12 @@ export default class Mundo extends Phaser.Scene {
                     puntaje -= 5;
                 }
                 gameObject.destroy();
+            }
+
+            if (antPuntaje != puntaje) {
+                // Se elimina de la lista de items interactivos
+                var index = items.indexOf(gameObject);
+                if (index !== -1) items.splice(index, 1);
             }
 
             self.socket.emit('dragend', {
