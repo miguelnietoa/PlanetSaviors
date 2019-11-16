@@ -1,23 +1,9 @@
 
-export default class menu extends Phaser.Scene {
+export default class Menu extends Phaser.Scene {
 
     constructor() {
 
-        super({ key: 'menu' });
-    }
-
-
-
-    init() {
-    }
-
-    preload() {
-        this.load.image("fondomenu", "../assets/menu/fondo2.png");
-        this.load.image("play", "../assets/menu/play.png");
-        this.load.audio("music", "../assets/music/shuinvy-childhood.mp3");
-        this.load.image("sonido", "../assets/Sonido/Consonido.png");
-        this.load.image("sinsonido", "../assets/Sonido/Sinsonido.png");
-
+        super({ key: 'menu'});
     }
 
     create() {
@@ -50,9 +36,12 @@ export default class menu extends Phaser.Scene {
             playButton.setInteractive();
 
             playButton.on("pointerup", () => {
+                //musicFondo.destroy();
                 musicFondo.destroy();
+                game.scene.start('mundo');
+                
+                //this.scene.destroy('menu');
 
-                this.scene.start('juego');
                 console.log("correcto");
             });
 
