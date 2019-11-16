@@ -7,7 +7,7 @@ export default class Preloader extends Phaser.Scene{
         this.load.on('complete', () => {
             this.scene.start('menu');
         }, this);
-        this.load.image("fondomenu", "../assets/menu/fondo2.png");
+        this.load.image("titulo", "../assets/menu/Titulo.png");
         this.load.image("play", "../assets/menu/play.png");
         this.load.audio("music", "../assets/music/shuinvy-childhood.mp3");
         this.load.image("sonido", "../assets/Sonido/Consonido.png");
