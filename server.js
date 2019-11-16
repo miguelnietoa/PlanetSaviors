@@ -37,7 +37,7 @@ io.on('connection', function (socket) {
         if (!readyPlayers.includes(socket)) {
             readyPlayers.push(socket);
         }
-        
+
         console.log('ready: ' + readyPlayers.length);
         console.log('players: ' + Object.keys(players).length);
         if (readyPlayers.length === Object.keys(players).length && !startGame) {
@@ -49,17 +49,26 @@ io.on('connection', function (socket) {
 
     });
 
-    socket.on('dragstart', (data)=> {
+    socket.on('dragstart', (data) => {
         console.log("emitiendo dragstart");
+
         socket.broadcast.emit('dragstartServer', data);
-        
+
     });
 
-    socket.on('drag', (data)=> {
+    socket.on('drag', (data) => {
         console.log("emitiendo drag");
         socket.broadcast.emit('dragServer', data);
-        
+
     });
+
+    socket.on('dragend', (data, collideBin) => {
+        console.log('colisiona: ', collideBin);
+        socket.broadcast.emit('dragendServer', data, collideBin);
+
+    }
+
+    );
 
     // send the players object to the new player
 

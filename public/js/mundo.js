@@ -58,6 +58,19 @@ export default class Mundo extends Phaser.Scene {
             }
 
         });
+        this.socket.on('dragendServer', (data, collideBin) => {
+            let item = getItem(data.id);
+            console.log("recibo dragEndServer");
+            if (item !== undefined) {
+                if (collideBin) {
+                    items.splice(items.indexOf(item), 1);
+                    item.destroy();
+                    // Falta crear nuevo item
+                } else {
+
+                }
+            }
+        });
         this.socket.on('newPlayer', function (playerInfo) {
             //addOtherPlayers(self, playerInfo);
         });
@@ -145,6 +158,8 @@ export default class Mundo extends Phaser.Scene {
             var index = items.indexOf(gameObject);
             if (index !== -1) items.splice(index, 1);
 
+            var antPuntaje = puntaje;
+
             if (colisiona(gameObject, glassBin)) {
                 if (gameObject.category.startsWith("glass")) {
                     console.log("correcto");
@@ -217,6 +232,19 @@ export default class Mundo extends Phaser.Scene {
                 }
                 gameObject.destroy();
             }
+
+            self.socket.emit('dragend', {
+                id: gameObject.id,
+                x: gameObject.x,
+                y: gameObject.y,
+                width: gameObject.width,
+                height: gameObject.height,
+                velocityY: gameObject.defaultVelocity,
+                image: gameObject.image,
+                tint: 0xFFFFFF
+            }, (antPuntaje === puntaje) ? false : true);
+
+
 
             txtPuntaje.setText('Puntaje: ' + puntaje);
         });
@@ -303,9 +331,9 @@ function colision(x1, y1, w1, h1, x2, y2, w2, h2) {
 }
 
 function getItem(id) {
-    for(let i in items) {
+    for (let i in items) {
         console.log(items[i].id);
-        if (items[i].id === id){
+        if (items[i].id === id) {
             return items[i];
         }
     }
