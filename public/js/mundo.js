@@ -36,7 +36,7 @@ export default class Mundo extends Phaser.Scene {
                 items.push(new itemJuego(self, itemsJSON[i].id, itemsJSON[i].x, itemsJSON[i].y, itemsJSON[i].velocityY, itemsJSON[i].image));
             }
         });
-        this.socket.on('newItem', function(item){
+        this.socket.on('newItem', function (item) {
             items.push(new itemJuego(self, item.id, item.x, item.y, item.velocityY, item.image));
         });
         this.socket.on('dragstartServer', (data) => {
@@ -45,6 +45,7 @@ export default class Mundo extends Phaser.Scene {
             if (item !== undefined) {
                 item.body.setVelocityY(data.velocityY);
                 item.tint = data.tint;
+                item.dragID = data.dragID;
                 console.log("id encontrado");
             } else {
                 console.log("item no encontrado");
@@ -68,10 +69,10 @@ export default class Mundo extends Phaser.Scene {
                 if (collideBin) {
                     items.splice(items.indexOf(item), 1);
                     item.destroy();
-                    // Falta crear nuevo item
                 } else {
                     item.tint = data.tint;
                     item.body.setVelocityY(data.velocityY);
+                    item.dragID = data.dragID;
                 }
             }
         });
@@ -124,140 +125,146 @@ export default class Mundo extends Phaser.Scene {
         musicFondo.play(musicConfig);
 
         this.input.on('dragstart', function (pointer, gameObject) { // Empieza a arrastrar
-            gameObject.body.setVelocityY(0);
-            let t = Math.random() * 0xffffff;
-            gameObject.tint = t;
-            console.log('comeinzaaa' + gameObject.tint);
-            self.socket.emit('dragstart', {
-                id: gameObject.id,
-                x: gameObject.x,
-                y: gameObject.y,
-                width: gameObject.width,
-                height: gameObject.height,
-                velocityY: 0,
-                image: gameObject.image,
-                tint: t
-            });
+            if (gameObject.dragID === undefined) {
+                gameObject.body.setVelocityY(0);
+                let t = Math.random() * 0xffffff;
+                gameObject.tint = t;
+                gameObject.dragID = self.socket.id;
+                console.log('comeinzaaa' + gameObject.tint);
+                self.socket.emit('dragstart', {
+                    id: gameObject.id,
+                    x: gameObject.x,
+                    y: gameObject.y,
+                    width: gameObject.width,
+                    height: gameObject.height,
+                    velocityY: 0,
+                    image: gameObject.image,
+                    tint: t,
+                    dragID: self.socket.id
+                });
+            }
 
 
         });
         this.input.on('drag', function (pointer, gameObject, dragX, dragY) { // Arrastrando objeto
-            gameObject.x = dragX;
-            gameObject.y = dragY;
-            self.socket.emit('drag', {
-                id: gameObject.id,
-                x: gameObject.x,
-                y: gameObject.y,
-                width: gameObject.width,
-                height: gameObject.height,
-                velocityY: 0,
-                image: gameObject.image,
-            });
+            if (gameObject.dragID === self.socket.id) {
+                gameObject.x = dragX;
+                gameObject.y = dragY;
+                self.socket.emit('drag', {
+                    id: gameObject.id,
+                    x: gameObject.x,
+                    y: gameObject.y,
+                    width: gameObject.width,
+                    height: gameObject.height,
+                    velocityY: 0,
+                    image: gameObject.image,
+                });
+            }
         });
         this.input.on('dragend', function (pointer, gameObject) { // Cuando se suelta el objeto
-            gameObject.body.setVelocityY(gameObject.defaultVelocity);
-            gameObject.tint = 0xFFFFFF;
+            if (gameObject.dragID === self.socket.id) {
+                gameObject.body.setVelocityY(gameObject.defaultVelocity);
+                gameObject.tint = 0xFFFFFF;
+                gameObject.dragID = undefined;
 
 
+                var antPuntaje = puntaje;
 
-            var antPuntaje = puntaje;
+                if (colisiona(gameObject, glassBin)) {
+                    if (gameObject.category.startsWith("glass")) {
+                        console.log("correcto");
+                        musicPop.play();
+                        puntaje += 5;
+                    } else {
+                        console.log("incorrecto");
+                        musicFail.play();
+                        puntaje -= 5;
+                    }
+                    gameObject.destroy();
 
-            if (colisiona(gameObject, glassBin)) {
-                if (gameObject.category.startsWith("glass")) {
-                    console.log("correcto");
-                    musicPop.play();
-                    puntaje += 5;
-                } else {
-                    console.log("incorrecto");
-                    musicFail.play();
-                    puntaje -= 5;
+                } else if (colisiona(gameObject, plasticBin)) {
+                    if (gameObject.category.startsWith("plastic")) {
+                        console.log("correcto");
+                        musicPop.play();
+                        puntaje += 5;
+                    } else {
+                        console.log("incorrecto");
+                        musicFail.play();
+                        puntaje -= 5;
+                    }
+                    gameObject.destroy();
+
+                } else if (colisiona(gameObject, metalBin)) {
+                    if (gameObject.category.startsWith("metal")) {
+                        console.log("correcto");
+                        musicPop.play();
+                        puntaje += 5;
+                    } else {
+                        console.log("incorrecto");
+                        musicFail.play();
+                        puntaje -= 5;
+                    }
+                    gameObject.destroy();
+
+                } else if (colisiona(gameObject, paperBin)) {
+                    if (gameObject.category.startsWith("paper")) {
+                        console.log("correcto");
+                        musicPop.play();
+                        puntaje += 5;
+                    } else {
+                        console.log("incorrecto");
+                        musicFail.play();
+                        puntaje -= 5;
+                    }
+                    gameObject.destroy();
+
+                } else if (colisiona(gameObject, organicBin)) {
+                    if (gameObject.category.startsWith("organic")) {
+                        console.log("correcto");
+                        musicPop.play();
+                        puntaje += 5;
+                    } else {
+                        console.log("incorrecto");
+                        musicFail.play();
+                        puntaje -= 5;
+                    }
+                    gameObject.destroy();
+
+                } else if (colisiona(gameObject, eWasteBin)) {
+                    if (gameObject.category.startsWith("eWaste")) {
+                        console.log("correcto");
+                        musicPop.play();
+                        puntaje += 5;
+                    } else {
+                        console.log("incorrecto");
+                        musicFail.play();
+                        puntaje -= 5;
+                    }
+                    gameObject.destroy();
                 }
-                gameObject.destroy();
 
-            } else if (colisiona(gameObject, plasticBin)) {
-                if (gameObject.category.startsWith("plastic")) {
-                    console.log("correcto");
-                    musicPop.play();
-                    puntaje += 5;
-                } else {
-                    console.log("incorrecto");
-                    musicFail.play();
-                    puntaje -= 5;
+                if (antPuntaje != puntaje) {
+                    // Se elimina de la lista de items interactivos
+                    var index = items.indexOf(gameObject);
+                    if (index !== -1) items.splice(index, 1);
                 }
-                gameObject.destroy();
 
-            } else if (colisiona(gameObject, metalBin)) {
-                if (gameObject.category.startsWith("metal")) {
-                    console.log("correcto");
-                    musicPop.play();
-                    puntaje += 5;
-                } else {
-                    console.log("incorrecto");
-                    musicFail.play();
-                    puntaje -= 5;
-                }
-                gameObject.destroy();
+                self.socket.emit('dragend', {
+                    id: gameObject.id,
+                    x: gameObject.x,
+                    y: gameObject.y,
+                    width: gameObject.width,
+                    height: gameObject.height,
+                    velocityY: gameObject.defaultVelocity,
+                    image: gameObject.image,
+                    tint: 0xFFFFFF
+                }, (antPuntaje === puntaje) ? false : true);
 
-            } else if (colisiona(gameObject, paperBin)) {
-                if (gameObject.category.startsWith("paper")) {
-                    console.log("correcto");
-                    musicPop.play();
-                    puntaje += 5;
-                } else {
-                    console.log("incorrecto");
-                    musicFail.play();
-                    puntaje -= 5;
-                }
-                gameObject.destroy();
 
-            } else if (colisiona(gameObject, organicBin)) {
-                if (gameObject.category.startsWith("organic")) {
-                    console.log("correcto");
-                    musicPop.play();
-                    puntaje += 5;
-                } else {
-                    console.log("incorrecto");
-                    musicFail.play();
-                    puntaje -= 5;
-                }
-                gameObject.destroy();
 
-            } else if (colisiona(gameObject, eWasteBin)) {
-                if (gameObject.category.startsWith("eWaste")) {
-                    console.log("correcto");
-                    musicPop.play();
-                    puntaje += 5;
-                } else {
-                    console.log("incorrecto");
-                    musicFail.play();
-                    puntaje -= 5;
-                }
-                gameObject.destroy();
+                txtPuntaje.setText('Puntaje: ' + puntaje);
             }
-
-            if (antPuntaje != puntaje) {
-                // Se elimina de la lista de items interactivos
-                var index = items.indexOf(gameObject);
-                if (index !== -1) items.splice(index, 1);
-            }
-
-            self.socket.emit('dragend', {
-                id: gameObject.id,
-                x: gameObject.x,
-                y: gameObject.y,
-                width: gameObject.width,
-                height: gameObject.height,
-                velocityY: gameObject.defaultVelocity,
-                image: gameObject.image,
-                tint: 0xFFFFFF
-            }, (antPuntaje === puntaje) ? false : true);
-
-
-
-            txtPuntaje.setText('Puntaje: ' + puntaje);
         });
-
-        //timer = this.time.addEvent({ delay: 1000, callback: updateCounter, callbackScope: this, loop: true });
     }
 
 
@@ -319,14 +326,6 @@ function isOnFloor(array, self) {
 
 
 }
-/*
-updateCounter() {
-
-    console.log(cont++);
-    if (cont == 10) {
-        timer.callback = null;
-    }
-}*/
 
 function colisiona(item1, item2) {
     // Se hace el ajuste para que las posiciones sean desde la esquina superior izquierda

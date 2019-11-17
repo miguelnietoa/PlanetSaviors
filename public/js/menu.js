@@ -59,6 +59,7 @@ export default class Menu extends Phaser.Scene {
             musicFondo.destroy();
             
             game.scene.start('mundo', this.socket);
+            game.scene.bringToTop('mundo');
         });
 
     }

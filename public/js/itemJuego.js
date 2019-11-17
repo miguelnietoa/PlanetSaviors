@@ -10,7 +10,8 @@ export default class itemJuego extends Phaser.GameObjects.Sprite {
         this.setInteractive();
         scene.input.setDraggable(this);
         this.id = id;
+        this.dragID = undefined;
     }
 
-    
+
 }
