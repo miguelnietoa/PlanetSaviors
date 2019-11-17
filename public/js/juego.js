@@ -2,6 +2,7 @@ import Mundo from './mundo.js';
 import Menu from './menu.js';
 import Preloader from './preloader.js';
 import Creditos from './creditos.js';
+import GameOver from './gameOver.js';
 
 const config = {
     width: 1300,
@@ -28,6 +29,7 @@ class Juego extends Phaser.Game{
         this.scene.add('mundo', new Mundo());
         this.scene.add('preloader', new Preloader());
         this.scene.add('creditos', new Creditos());
+        this.scene.add('gameover', new GameOver());
         this.scene.start('preloader');
     }
 }

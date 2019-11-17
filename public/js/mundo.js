@@ -79,12 +79,16 @@ export default class Mundo extends Phaser.Scene {
                     mayor = players[i].puntaje;
                 }
             }
+            let sw;
             if (mayor === puntaje) {
                 console.log('GANASTE');
+                sw = true;
             } else {
                 console.log('PERDISTE');
+                sw = false;
             }
-            
+            game.scene.start('gameover', sw);
+            game.scene.bringToTop('gameOver');
         });
 
         this.add.image(-80, -20, 'fondomundo').setOrigin(0, 0);
