@@ -26,6 +26,13 @@ export default class Menu extends Phaser.Scene {
         }
         musicFondo.play(musicConfig);
 
+        creditoButton.setInteractive();
+        
+        creditoButton.on("pointerup", ()=> {
+            game.scene.start('creditos');
+            game.scene.bringToTop('creditos');
+        });
+
         const clickButton = this.add.image(25, 25, 'sonido')
             .setInteractive()
             .on('pointerup', () => musicFondo.resume()
@@ -50,6 +57,7 @@ export default class Menu extends Phaser.Scene {
 
         this.socket.on('startGame', ()=>{
             musicFondo.destroy();
+            
             game.scene.start('mundo', this.socket);
         });
 

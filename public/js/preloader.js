@@ -7,6 +7,7 @@ export default class Preloader extends Phaser.Scene{
         this.load.on('complete', () => {
             this.scene.start('menu');
         }, this);
+        this.load.image("back", "../assets/menu/back.png");
         this.load.image("titulo", "../assets/menu/Titulo.png");
         this.load.image("play", "../assets/menu/playnuevo.png");
         this.load.image("creditos", "../assets/menu/creditos.png");
