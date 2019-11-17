@@ -65,16 +65,16 @@ io.on('connection', function (socket) {
     socket.on('dragend', (data, collideBin) => {
         console.log('colisiona: ', collideBin);
         socket.broadcast.emit('dragendServer', data, collideBin);
-        /*if (collideBin) {
+        if (collideBin) {
             // Se elimina de los items en server
-            //borrarItem(data.id);
-
-            let i = Object.keys(items).length;
-            while (i >= Object.keys(items).length) {
-                generarItem(i);
-            }
-            io.sockets.emit('currentItems', items[i+1]);
-        }*/
+            console.log('id a borrar: ' + data.id);
+            borrarItem(data.id);
+            var it;
+            do {
+                it = generarItem(Object.keys(items).length);
+            } while (it === undefined);
+            io.sockets.emit('newItem', it);
+        }
 
     }
 
@@ -136,9 +136,9 @@ function getItem(id) {
 
 function borrarItem(id) {
     for (let i in items) {
-        console.log(items[i].id);
         if (items[i].id === id) {
-            items.splice(items[i], 1);
+            delete items[i];
+            return;
         }
     }
 }
@@ -322,7 +322,7 @@ function generarItem(i) {
     }
     let xx = 200 + Math.floor(Math.random() * (1100 - 200 + 1));
     if (!colisionaArray(xx - w / 2, 0 - h / 2, w, h)) {
-        items[i] = {
+        return items[i] = {
             id: ++cont,
             x: xx,
             y: 0,
@@ -331,5 +331,7 @@ function generarItem(i) {
             velocityY: 30,
             image: img
         };
+    } else {
+        return undefined;
     }
 }

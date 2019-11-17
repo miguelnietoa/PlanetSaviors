@@ -36,6 +36,9 @@ export default class Mundo extends Phaser.Scene {
                 items.push(new itemJuego(self, itemsJSON[i].id, itemsJSON[i].x, itemsJSON[i].y, itemsJSON[i].velocityY, itemsJSON[i].image));
             }
         });
+        this.socket.on('newItem', function(item){
+            items.push(new itemJuego(self, item.id, item.x, item.y, item.velocityY, item.image));
+        });
         this.socket.on('dragstartServer', (data) => {
             console.log(data.id, data.tint);
             let item = getItem(data.id);
