@@ -1,3 +1,4 @@
+import Mundo from './mundo.js';
 var sw = false;
 export default class Menu extends Phaser.Scene {
 
@@ -57,9 +58,9 @@ export default class Menu extends Phaser.Scene {
 
         this.socket.on('startGame', ()=>{
             musicFondo.destroy();
-            
             game.scene.start('mundo', this.socket);
             game.scene.bringToTop('mundo');
+            
         });
 
     }

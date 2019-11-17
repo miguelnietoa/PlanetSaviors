@@ -70,7 +70,7 @@ export default class Mundo extends Phaser.Scene {
         });
         this.socket.on('endGame', () => {
             self.socket.emit('puntaje', puntaje);
-            this.scene.stop();
+            
         });
         this.socket.on('gameOver', (players) => {
             var mayor = puntaje;
@@ -79,15 +79,20 @@ export default class Mundo extends Phaser.Scene {
                     mayor = players[i].puntaje;
                 }
             }
-            let sw;
+            let str;
             if (mayor === puntaje) {
                 console.log('GANASTE');
-                sw = true;
+                str = 'GANASTE';
+                
+              
             } else {
                 console.log('PERDISTE');
-                sw = false;
+                str ='PERDISTE';                
             }
-            game.scene.start('gameover', sw);
+            game.scene.start('gameover', str);
+            musicFondo.destroy();
+            this.scene.stop();
+            
             game.scene.bringToTop('gameOver');
         });
 

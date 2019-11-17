@@ -1,4 +1,4 @@
-var ganador;
+import Menu from './menu.js';
 export default class GameOver extends Phaser.Scene {
 
     constructor() {
@@ -7,15 +7,22 @@ export default class GameOver extends Phaser.Scene {
     }
 
     init(gan) {
-        ganador = gan;
+        this.str = gan;
     }
 
     create() {
-        if (ganador) {
-            this.add.text(595, 45, 'GANASTE', { font: '24px Arial', fill: '#ffffff' });
-        } else {
-            this.add.text(595, 45, 'PERDISTE', { font: '24px Arial', fill: '#ffffff' });
-        }
+        this.add.image(-80, -20, 'end').setOrigin(0, 0);
+        let backButton = this.add.image(20, 20, 'back').setOrigin(0, 0);
+       
+            this.add.text(400, 300, this.str, { font: '120px Futura', fill: '#182d3b' });
+       
+
+        backButton.setInteractive();
+        backButton.on("pointerup", () => {
+            game.scene.start('menu');
+            game.scene.bringToTop('menu');
+
+        });
 
     }
 }

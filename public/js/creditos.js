@@ -12,6 +12,7 @@ export default class Creditos extends Phaser.Scene {
 
         backButton.setInteractive();
         backButton.on("pointerup", () => {
+            this.scene.stop();
             game.scene.bringToTop('menu');
 
         });
