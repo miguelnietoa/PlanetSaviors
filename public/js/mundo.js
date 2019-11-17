@@ -284,7 +284,7 @@ export default class Mundo extends Phaser.Scene {
         }
 
 
-        isOnFloor(items);
+        isOnFloor(items, this);
     }
 
 
@@ -303,13 +303,16 @@ function colisionaArray(item, items) {
     }
     return sw;
 }
-function isOnFloor(array) {
+function isOnFloor(array, self) {
     let i = 0;
     array.forEach(item => {
         if (item.y + item.height / 2 >= 650) { // Si está en el piso
+
             item.body.setVelocityY(0); // Se queda quieto
             item.input.draggable = false;  // No se puede arrastrar
             items.splice(i, 1);
+
+            self.socket.emit('onFloor', item.id);
         }
         i++;
     });

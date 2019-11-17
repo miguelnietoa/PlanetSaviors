@@ -57,7 +57,6 @@ io.on('connection', function (socket) {
     });
 
     socket.on('drag', (data) => {
-        console.log("emitiendo drag");
         socket.broadcast.emit('dragServer', data);
 
     });
@@ -68,17 +67,29 @@ io.on('connection', function (socket) {
         if (collideBin) {
             // Se elimina de los items en server
             console.log('id a borrar: ' + data.id);
-            borrarItem(data.id);
+            let i = borrarItem(data.id);
             var it;
             do {
-                it = generarItem(Object.keys(items).length);
+                it = generarItem(i);
             } while (it === undefined);
-            io.sockets.emit('newItem', it);
+            io.emit('newItem', it);
         }
 
     }
-
     );
+
+    socket.on('onFloor', (id) => {
+        console.log('id a borrar: ' + id);
+        var i = borrarItem(id);
+        if (i !== undefined) {
+            var it;
+            do {
+                it = generarItem(i);
+            } while (it === undefined);
+            io.emit('newItem', it);
+        }
+
+    });
 
     // send the players object to the new player
 
@@ -138,9 +149,10 @@ function borrarItem(id) {
     for (let i in items) {
         if (items[i].id === id) {
             delete items[i];
-            return;
+            return i;
         }
     }
+    return undefined;
 }
 
 function generarItems() {
@@ -322,7 +334,7 @@ function generarItem(i) {
     }
     let xx = 200 + Math.floor(Math.random() * (1100 - 200 + 1));
     if (!colisionaArray(xx - w / 2, 0 - h / 2, w, h)) {
-        return items[i] = {
+        items[i] = {
             id: ++cont,
             x: xx,
             y: 0,
@@ -331,6 +343,7 @@ function generarItem(i) {
             velocityY: 30,
             image: img
         };
+        return items[i];
     } else {
         return undefined;
     }
