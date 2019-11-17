@@ -11,7 +11,8 @@ export default class Menu extends Phaser.Scene {
         this.socket = io();
         var self = this;
         this.add.image(-80, -20, 'background').setOrigin(0, 0);
-        let playButton = this.add.image(this.game.renderer.width / 2, this.game.renderer.height / 1.2, 'play').setDepth(1);
+        let playButton = this.add.image(this.game.renderer.width / 2, this.game.renderer.height / 2, 'play').setDepth(1);
+        let creditoButton = this.add.image(this.game.renderer.width / 2, this.game.renderer.height / 1.5, 'creditos').setDepth(1);
         this.add.image(this.game.renderer.width / 2, this.game.renderer.height / 5, 'titulo').setDepth(1);
         var musicFondo = this.sound.add("music");
         var musicConfig = {

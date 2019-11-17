@@ -82,7 +82,7 @@ export default class Mundo extends Phaser.Scene {
 
         });
 
-        this.add.image(-80, -20, 'background').setOrigin(0, 0);
+        this.add.image(-80, -20, 'fondomundo').setOrigin(0, 0);
         glassBin = this.add.image(80, 110, 'glassBin').setScale(0.8);
         plasticBin = this.add.image(80, 110 * 3, 'plasticBin').setScale(0.75);
         metalBin = this.add.image(80, 110 * 5, 'metalBin').setScale(0.75);
