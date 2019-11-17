@@ -4,11 +4,14 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var port = process.env.PORT || 3000;
 
+var timer;
+var secs = 0;
 var items = {};
 var players = {};
 var cont = 0;
 var readyPlayers = [];
 var startGame = false;
+var contPuntaje = 0;
 
 // Servimos los archivos necesarios
 app.use(express.static(__dirname + '/public'));
@@ -45,6 +48,19 @@ io.on('connection', function (socket) {
             io.sockets.emit('startGame');
             io.sockets.emit('currentItems', items);
             startGame = true;
+            timer = setInterval(() => {
+                secs++;
+                var min = parseInt(secs / 60);
+                min = (String(min).length === 1) ? '0' + min : min;
+                var sec = parseInt(secs % 60);
+                sec = (String(secs).length === 1) ? '0' + sec : sec;
+                io.emit('updateTime', min + ':' + sec);
+                if (secs === 12) {
+                    clearInterval(timer);
+                    io.emit('endGame');
+                }
+                console.log('segundos: ' + secs);
+            }, 1000);
         }
 
     });
@@ -91,6 +107,16 @@ io.on('connection', function (socket) {
 
     });
 
+    socket.on('puntaje', (puntaje) => {
+        console.log('puntaje en socket on putnaje: ' + puntaje);
+        players[socket.id].puntaje = puntaje;
+        contPuntaje++;
+        if (contPuntaje === Object.keys(players).length) {
+            verificarGanador();
+            io.emit('gameOver', players);
+        }
+    });
+
     // send the players object to the new player
 
     // update all other players of the new player
@@ -116,6 +142,12 @@ io.on('connection', function (socket) {
 http.listen(port, () => {
     console.log("Escuchando en " + port);
 });
+
+function verificarGanador() {
+    for (let i in players) {
+        console.log(players[i].puntaje);
+    }
+}
 
 function colisionaArray(x, y, w, h) {
     for (let i in items) {

@@ -2,7 +2,7 @@ import itemJuego from './itemJuego.js';
 
 var it;
 
-var timer;
+var time;
 var cont = 0;
 var items = [];
 var txtPuntaje;
@@ -21,13 +21,9 @@ export default class Mundo extends Phaser.Scene {
 
     init(socket) {
         this.socket = socket;
-        console.log("ercibido papa");
     }
 
     create() {
-        // this.cameras.main.backgroundColor.setTo(255,255,255); // Color de fondo de la escena
-
-        this.disableVisibilityChange = true;
 
         var self = this;
 
@@ -40,15 +36,11 @@ export default class Mundo extends Phaser.Scene {
             items.push(new itemJuego(self, item.id, item.x, item.y, item.velocityY, item.image));
         });
         this.socket.on('dragstartServer', (data) => {
-            console.log(data.id, data.tint);
             let item = getItem(data.id);
             if (item !== undefined) {
                 item.body.setVelocityY(data.velocityY);
                 item.tint = data.tint;
                 item.dragID = data.dragID;
-                console.log("id encontrado");
-            } else {
-                console.log("item no encontrado");
             }
 
         });
@@ -57,14 +49,11 @@ export default class Mundo extends Phaser.Scene {
             if (item !== undefined) {
                 item.x = data.x;
                 item.y = data.y;
-            } else {
-                console.log("item no encontrado");
             }
 
         });
         this.socket.on('dragendServer', (data, collideBin) => {
             let item = getItem(data.id);
-            console.log("recibo dragEndServer");
             if (item !== undefined) {
                 if (collideBin) {
                     items.splice(items.indexOf(item), 1);
@@ -76,11 +65,26 @@ export default class Mundo extends Phaser.Scene {
                 }
             }
         });
-        this.socket.on('newPlayer', function (playerInfo) {
-            //addOtherPlayers(self, playerInfo);
+        this.socket.on('updateTime', (t) => {
+            time.text = t;
         });
-        this.socket.on('disconnect', function (playerId) {
-
+        this.socket.on('endGame', () => {
+            self.socket.emit('puntaje', puntaje);
+            this.scene.stop();
+        });
+        this.socket.on('gameOver', (players) => {
+            var mayor = puntaje;
+            for (let i in players) {
+                if (players[i].puntaje > mayor) {
+                    mayor = players[i].puntaje;
+                }
+            }
+            if (mayor === puntaje) {
+                console.log('GANASTE');
+            } else {
+                console.log('PERDISTE');
+            }
+            
         });
 
         this.add.image(-80, -20, 'fondomundo').setOrigin(0, 0);
@@ -91,6 +95,7 @@ export default class Mundo extends Phaser.Scene {
         organicBin = this.add.image(1220, 110 * 3, 'organicBin').setScale(0.75);
         eWasteBin = this.add.image(1220, 110 * 5, 'eWasteBin').setScale(0.75);
         txtPuntaje = this.add.text(570, 20, 'Puntaje: 0', { font: '24px Arial', fill: '#ffffff' });
+        time = this.add.text(595, 45, '00:00', { font: '24px Arial', fill: '#ffffff' });
 
         // Personaje
         this.personaje = this.add.sprite(100, 500, 'personaje');
@@ -130,7 +135,6 @@ export default class Mundo extends Phaser.Scene {
                 let t = Math.random() * 0xffffff;
                 gameObject.tint = t;
                 gameObject.dragID = self.socket.id;
-                console.log('comeinzaaa' + gameObject.tint);
                 self.socket.emit('dragstart', {
                     id: gameObject.id,
                     x: gameObject.x,
@@ -172,11 +176,9 @@ export default class Mundo extends Phaser.Scene {
 
                 if (colisiona(gameObject, glassBin)) {
                     if (gameObject.category.startsWith("glass")) {
-                        console.log("correcto");
                         musicPop.play();
                         puntaje += 5;
                     } else {
-                        console.log("incorrecto");
                         musicFail.play();
                         puntaje -= 5;
                     }
@@ -184,11 +186,9 @@ export default class Mundo extends Phaser.Scene {
 
                 } else if (colisiona(gameObject, plasticBin)) {
                     if (gameObject.category.startsWith("plastic")) {
-                        console.log("correcto");
                         musicPop.play();
                         puntaje += 5;
                     } else {
-                        console.log("incorrecto");
                         musicFail.play();
                         puntaje -= 5;
                     }
@@ -196,11 +196,9 @@ export default class Mundo extends Phaser.Scene {
 
                 } else if (colisiona(gameObject, metalBin)) {
                     if (gameObject.category.startsWith("metal")) {
-                        console.log("correcto");
                         musicPop.play();
                         puntaje += 5;
                     } else {
-                        console.log("incorrecto");
                         musicFail.play();
                         puntaje -= 5;
                     }
@@ -208,11 +206,9 @@ export default class Mundo extends Phaser.Scene {
 
                 } else if (colisiona(gameObject, paperBin)) {
                     if (gameObject.category.startsWith("paper")) {
-                        console.log("correcto");
                         musicPop.play();
                         puntaje += 5;
                     } else {
-                        console.log("incorrecto");
                         musicFail.play();
                         puntaje -= 5;
                     }
@@ -220,11 +216,9 @@ export default class Mundo extends Phaser.Scene {
 
                 } else if (colisiona(gameObject, organicBin)) {
                     if (gameObject.category.startsWith("organic")) {
-                        console.log("correcto");
                         musicPop.play();
                         puntaje += 5;
                     } else {
-                        console.log("incorrecto");
                         musicFail.play();
                         puntaje -= 5;
                     }
@@ -232,11 +226,9 @@ export default class Mundo extends Phaser.Scene {
 
                 } else if (colisiona(gameObject, eWasteBin)) {
                     if (gameObject.category.startsWith("eWaste")) {
-                        console.log("correcto");
                         musicPop.play();
                         puntaje += 5;
                     } else {
-                        console.log("incorrecto");
                         musicFail.play();
                         puntaje -= 5;
                     }
@@ -342,7 +334,6 @@ function colision(x1, y1, w1, h1, x2, y2, w2, h2) {
 
 function getItem(id) {
     for (let i in items) {
-        console.log(items[i].id);
         if (items[i].id === id) {
             return items[i];
         }
