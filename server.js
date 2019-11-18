@@ -36,7 +36,6 @@ io.on('connection', function (socket) {
         puntaje: 0
     }
     socket.on('ready', () => {
-        console.log("raeadyyyyy");
         if (!readyPlayers.includes(socket)) {
             readyPlayers.push(socket);
         }
@@ -59,17 +58,13 @@ io.on('connection', function (socket) {
                     clearInterval(timer);
                     io.emit('endGame');
                 }
-                console.log('segundos: ' + secs);
             }, 1000);
         }
 
     });
 
     socket.on('dragstart', (data) => {
-        console.log("emitiendo dragstart");
-
         socket.broadcast.emit('dragstartServer', data);
-
     });
 
     socket.on('drag', (data) => {
@@ -78,11 +73,9 @@ io.on('connection', function (socket) {
     });
 
     socket.on('dragend', (data, collideBin) => {
-        console.log('colisiona: ', collideBin);
         socket.broadcast.emit('dragendServer', data, collideBin);
         if (collideBin) {
             // Se elimina de los items en server
-            console.log('id a borrar: ' + data.id);
             let i = borrarItem(data.id);
             var it;
             do {
@@ -95,7 +88,6 @@ io.on('connection', function (socket) {
     );
 
     socket.on('onFloor', (id) => {
-        console.log('id a borrar: ' + id);
         var i = borrarItem(id);
         if (i !== undefined) {
             var it;
@@ -108,30 +100,20 @@ io.on('connection', function (socket) {
     });
 
     socket.on('puntaje', (puntaje) => {
-        console.log('puntaje en socket on putnaje: ' + puntaje);
         players[socket.id].puntaje = puntaje;
         contPuntaje++;
         if (contPuntaje === Object.keys(players).length) {
-            verificarGanador();
             io.emit('gameOver', players);
         }
     });
 
-    // send the players object to the new player
-
-    // update all other players of the new player
-    //socket.broadcast.emit('newPlayer', players[socket.id]);
-
-    // when a player disconnects, remove them from our players object
     socket.on('disconnect', function () {
         console.log('user disconnected');
-        // remove this player from our players object
+        
         delete players[socket.id];
         if (readyPlayers.includes(socket)) {
             readyPlayers.splice(readyPlayers.indexOf(socket), 1);
         }
-        // emit a message to all players to remove this player
-        // io.emit('disconnect', socket.id);
     });
 
 
@@ -143,11 +125,6 @@ http.listen(port, () => {
     console.log("Escuchando en " + port);
 });
 
-function verificarGanador() {
-    for (let i in players) {
-        console.log(players[i].puntaje);
-    }
-}
 
 function colisionaArray(x, y, w, h) {
     for (let i in items) {
@@ -169,7 +146,6 @@ function colision(x1, y1, w1, h1, x2, y2, w2, h2) {
 
 function getItem(id) {
     for (let i in items) {
-        console.log(items[i].id);
         if (items[i].id === id) {
             return items[i];
         }

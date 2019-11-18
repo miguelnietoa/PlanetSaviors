@@ -10,7 +10,6 @@ export default class Menu extends Phaser.Scene {
     create() {
 
         this.socket = io();
-        var self = this;
         this.add.image(-80, -20, 'background').setOrigin(0, 0);
         let playButton = this.add.image(this.game.renderer.width / 2, this.game.renderer.height / 2, 'play').setDepth(1);
         let creditoButton = this.add.image(this.game.renderer.width / 2, this.game.renderer.height / 1.5, 'creditos').setDepth(1);
@@ -72,8 +71,5 @@ export default class Menu extends Phaser.Scene {
             
         });
 
-    }
-
-    update() {
     }
 }

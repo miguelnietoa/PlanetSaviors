@@ -92,7 +92,6 @@ export default class Mundo extends Phaser.Scene {
             game.scene.start('gameover', str);
             musicFondo.destroy();
             this.scene.stop();
-            
             game.scene.bringToTop('gameOver');
         });
 
