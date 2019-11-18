@@ -66,6 +66,7 @@ export default class Menu extends Phaser.Scene {
 
         this.socket.on('startGame', ()=>{
             musicFondo.destroy();
+            this.scene.stop();
             game.scene.start('mundo', this.socket);
             game.scene.bringToTop('mundo');
             
