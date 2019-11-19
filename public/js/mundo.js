@@ -1,7 +1,5 @@
 import itemJuego from './itemJuego.js';
 
-var it;
-
 var time;
 var cont = 0;
 var items = [];

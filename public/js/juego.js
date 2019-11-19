@@ -26,12 +26,14 @@ const config = {
 class Juego extends Phaser.Game{
     constructor(){
         super(config);
+
         this.scene.add('menu', new Menu());
         this.scene.add('mundo', new Mundo());
         this.scene.add('preloader', new Preloader());
         this.scene.add('creditos', new Creditos());
         this.scene.add('gameover', new GameOver());
         this.scene.add('info', new Info());
+        
         this.scene.start('preloader');
     }
 }

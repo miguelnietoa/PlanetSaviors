@@ -16,6 +16,7 @@ export default class Menu extends Phaser.Scene {
         let infoButton = this.add.image(this.game.renderer.width / 2, this.game.renderer.height / 1.2, 'info').setDepth(1).setScale(0.75);;
         this.add.image(this.game.renderer.width / 2, this.game.renderer.height / 5, 'titulo').setDepth(1);
         var musicFondo = this.sound.add("music");
+        
         var musicConfig = {
             mute: false,
             volume: 0.3,

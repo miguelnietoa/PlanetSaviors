@@ -65,7 +65,6 @@ export default class Info extends Phaser.Scene {
         backButton.on("pointerup", () => {
             this.scene.stop();
             game.scene.bringToTop('menu');
-
         });
     }
     

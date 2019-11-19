@@ -13,5 +13,4 @@ export default class itemJuego extends Phaser.GameObjects.Sprite {
         this.dragID = undefined;
     }
 
-
 }

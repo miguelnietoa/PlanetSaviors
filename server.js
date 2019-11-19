@@ -18,7 +18,7 @@ app.use(express.static(__dirname + '/public'));
 app.use('/js', express.static(__dirname + '/node_modules/socket.io-client/dist'));
 app.use('/js', express.static(__dirname + '/node_modules/phaser/dist'));
 
-console.log("Servidor iniciado...");
+console.log("Server started");
 
 // Ruta principal
 app.get('/', function (req, res) {
@@ -122,7 +122,7 @@ io.on('connection', function (socket) {
 
 
 http.listen(port, () => {
-    console.log("Escuchando en " + port);
+    console.log("Listening on " + port);
 });
 
 
