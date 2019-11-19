@@ -93,6 +93,7 @@ export default class Mundo extends Phaser.Scene {
             musicFondo.destroy();
             this.scene.stop();
             game.scene.bringToTop('gameOver');
+            this.socket.emit('disconnect');
         });
 
         this.add.image(-80, -20, 'fondomundo').setOrigin(0, 0);
