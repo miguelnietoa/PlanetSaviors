@@ -21,12 +21,12 @@ export default class Preloader extends Phaser.Scene{
         this.load.image("sonido", "../assets/Sonido/Consonido.png");
         this.load.image("sinsonido", "../assets/Sonido/Sinsonido.png");
         this.load.spritesheet("personaje", "../assets/Spritesprueba.png", { frameWidth: 150, frameHeight: 300 });
-        this.load.image("eWasteBin", "../assets/e-WasteBin/binE-Waste.png");
-        this.load.image("eWaste1", "../assets/e-WasteBin/calculator_1.png");
-        this.load.image("eWaste2", "../assets/e-WasteBin/foco.png");
-        this.load.image("eWaste3", "../assets/e-WasteBin/microondas.png");
-        this.load.image("eWaste4", "../assets/e-WasteBin/Recurso 10.png");
-        this.load.image("eWaste5", "../assets/e-WasteBin/Recurso 11.png");
+        this.load.image("eWasteBin", "../assets/eWasteBin/binE-Waste.png");
+        this.load.image("eWaste1", "../assets/eWasteBin/calculator_1.png");
+        this.load.image("eWaste2", "../assets/eWasteBin/foco.png");
+        this.load.image("eWaste3", "../assets/eWasteBin/microondas.png");
+        this.load.image("eWaste4", "../assets/eWasteBin/Recurso 10.png");
+        this.load.image("eWaste5", "../assets/eWasteBin/Recurso 11.png");
         this.load.image("glassBin", "../assets/glassBin/binGlass.png");
         this.load.image("glass1", "../assets/glassBin/Recurso 3.png");
         this.load.image("glass2", "../assets/glassBin/Recurso 14.png");
