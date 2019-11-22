@@ -116,15 +116,10 @@ io.on('connection', function (socket) {
             io.emit('gameOver', players);
             contPuntaje = 0;
             items = {};
+            readyPlayers ={};
         }
     });
 
-    // send the players object to the new player
-
-    // update all other players of the new player
-    //socket.broadcast.emit('newPlayer', players[socket.id]);
-
-    // when a player disconnects, remove them from our players object
     socket.on('disconnect', function () {
         console.log('user disconnected');
         // remove this player from our players object
@@ -132,9 +127,6 @@ io.on('connection', function (socket) {
         if (readyPlayers.includes(socket)) {
             readyPlayers.splice(readyPlayers.indexOf(socket), 1);
         }
-        
-        // emit a message to all players to remove this player
-        // io.emit('disconnect', socket.id);
     });
 
 
