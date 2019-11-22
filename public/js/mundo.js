@@ -1,5 +1,7 @@
 import itemJuego from './itemJuego.js';
 
+var it;
+
 var time;
 var cont = 0;
 var items = [];
@@ -87,11 +89,11 @@ export default class Mundo extends Phaser.Scene {
                 console.log('PERDISTE');
                 str ='PERDISTE';                
             }
+            console.log('entra en gameOver, mundo.js');
             game.scene.start('gameover', str);
             musicFondo.destroy();
             this.scene.stop();
-            game.scene.bringToTop('gameOver');
-            this.socket.emit('disconnect');
+            game.scene.bringToTop('gameover');
         });
 
         this.add.image(-80, -20, 'fondomundo').setOrigin(0, 0);

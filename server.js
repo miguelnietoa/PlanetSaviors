@@ -18,7 +18,7 @@ app.use(express.static(__dirname + '/public'));
 app.use('/js', express.static(__dirname + '/node_modules/socket.io-client/dist'));
 app.use('/js', express.static(__dirname + '/node_modules/phaser/dist'));
 
-console.log("Server started");
+console.log("Server started...");
 
 // Ruta principal
 app.get('/', function (req, res) {
@@ -36,6 +36,7 @@ io.on('connection', function (socket) {
         puntaje: 0
     }
     socket.on('ready', () => {
+        console.log("raeadyyyyy");
         if (!readyPlayers.includes(socket)) {
             readyPlayers.push(socket);
         }
@@ -54,9 +55,11 @@ io.on('connection', function (socket) {
                 var sec = parseInt(secs % 60);
                 sec = (String(secs).length === 1) ? '0' + sec : sec;
                 io.emit('updateTime', min + ':' + sec);
-                if (secs === 120) {
+                if (secs === 10) {
                     clearInterval(timer);
                     io.emit('endGame');
+                    startGame = false;
+                    secs = 0;
                 }
             }, 1000);
         }
@@ -64,7 +67,10 @@ io.on('connection', function (socket) {
     });
 
     socket.on('dragstart', (data) => {
+        console.log("emitiendo dragstart");
+
         socket.broadcast.emit('dragstartServer', data);
+
     });
 
     socket.on('drag', (data) => {
@@ -73,9 +79,11 @@ io.on('connection', function (socket) {
     });
 
     socket.on('dragend', (data, collideBin) => {
+        console.log('colisiona: ', collideBin);
         socket.broadcast.emit('dragendServer', data, collideBin);
         if (collideBin) {
             // Se elimina de los items en server
+            
             let i = borrarItem(data.id);
             var it;
             do {
@@ -88,6 +96,7 @@ io.on('connection', function (socket) {
     );
 
     socket.on('onFloor', (id) => {
+        
         var i = borrarItem(id);
         if (i !== undefined) {
             var it;
@@ -100,20 +109,32 @@ io.on('connection', function (socket) {
     });
 
     socket.on('puntaje', (puntaje) => {
+        console.log('puntaje en socket on putnaje: ' + puntaje);
         players[socket.id].puntaje = puntaje;
         contPuntaje++;
         if (contPuntaje === Object.keys(players).length) {
             io.emit('gameOver', players);
+            contPuntaje = 0;
+            items = {};
         }
     });
 
+    // send the players object to the new player
+
+    // update all other players of the new player
+    //socket.broadcast.emit('newPlayer', players[socket.id]);
+
+    // when a player disconnects, remove them from our players object
     socket.on('disconnect', function () {
         console.log('user disconnected');
-        
+        // remove this player from our players object
         delete players[socket.id];
         if (readyPlayers.includes(socket)) {
             readyPlayers.splice(readyPlayers.indexOf(socket), 1);
         }
+        
+        // emit a message to all players to remove this player
+        // io.emit('disconnect', socket.id);
     });
 
 

@@ -10,13 +10,13 @@ export default class Menu extends Phaser.Scene {
     create() {
 
         this.socket = io();
+        var self = this;
         this.add.image(-80, -20, 'background').setOrigin(0, 0);
         let playButton = this.add.image(this.game.renderer.width / 2, this.game.renderer.height / 2, 'play').setDepth(1);
         let creditoButton = this.add.image(this.game.renderer.width / 2, this.game.renderer.height / 1.5, 'creditos').setDepth(1);
         let infoButton = this.add.image(this.game.renderer.width / 2, this.game.renderer.height / 1.2, 'info').setDepth(1).setScale(0.75);;
         this.add.image(this.game.renderer.width / 2, this.game.renderer.height / 5, 'titulo').setDepth(1);
         var musicFondo = this.sound.add("music");
-        
         var musicConfig = {
             mute: false,
             volume: 0.3,
@@ -58,6 +58,7 @@ export default class Menu extends Phaser.Scene {
         playButton.on("pointerup", () => {
             console.log("da en play");
             if (!sw){
+                console.log("se hace un emit ready");
                 this.socket.emit('ready');
                 sw = true;
             }
@@ -66,11 +67,13 @@ export default class Menu extends Phaser.Scene {
 
         this.socket.on('startGame', ()=>{
             musicFondo.destroy();
-            this.scene.stop();
             game.scene.start('mundo', this.socket);
             game.scene.bringToTop('mundo');
             
         });
 
+    }
+
+    update() {
     }
 }

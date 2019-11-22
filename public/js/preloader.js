@@ -64,5 +64,4 @@ export default class Preloader extends Phaser.Scene{
         this.load.audio("fail", "../assets/music/fail.mp3");
         this.load.audio("pop", "../assets/music/pop.mp3");
     }
-    
 }

@@ -1,3 +1,5 @@
+import Menu from "./menu.js";
+
 export default class Creditos extends Phaser.Scene {
 
     constructor() {
