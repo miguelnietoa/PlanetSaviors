@@ -116,7 +116,7 @@ io.on('connection', function (socket) {
             io.emit('gameOver', players);
             contPuntaje = 0;
             items = {};
-            readyPlayers ={};
+            readyPlayers =[];
         }
     });
 
