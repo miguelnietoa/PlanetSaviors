@@ -83,7 +83,7 @@ io.on('connection', function (socket) {
         socket.broadcast.emit('dragendServer', data, collideBin);
         if (collideBin) {
             // Se elimina de los items en server
-            
+
             let i = borrarItem(data.id);
             var it;
             do {
@@ -96,7 +96,7 @@ io.on('connection', function (socket) {
     );
 
     socket.on('onFloor', (id) => {
-        
+
         var i = borrarItem(id);
         if (i !== undefined) {
             var it;
@@ -116,8 +116,9 @@ io.on('connection', function (socket) {
             io.emit('gameOver', players);
             contPuntaje = 0;
             items = {};
-            readyPlayers =[];
+            readyPlayers = [];
         }
+        
     });
 
     socket.on('disconnect', function () {
