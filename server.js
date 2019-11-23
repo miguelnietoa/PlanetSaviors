@@ -50,10 +50,11 @@ io.on('connection', function (socket) {
             startGame = true;
             timer = setInterval(() => {
                 secs++;
-                var min = parseInt(secs / 60);
+                let aux = 90 - secs;
+                var min = parseInt(aux / 60);
                 min = (String(min).length === 1) ? '0' + min : min;
-                var sec = parseInt(secs % 60);
-                sec = (String(secs).length === 1) ? '0' + sec : sec;
+                var sec = parseInt(aux % 60);
+                sec = (String(aux).length === 1) ? '0' + sec : sec;
                 io.emit('updateTime', min + ':' + sec);
                 if (secs === 90) {
                     clearInterval(timer);
